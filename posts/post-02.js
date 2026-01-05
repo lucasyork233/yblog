@@ -1,5 +1,5 @@
 // 文章内容 - 使用全局变量
-window.mySecondPostContent = `今天我想和大家分享一下关于极简主义设计的思考。
+window.post02Content = `今天我想和大家分享一下关于极简主义设计的思考。
 
 ## 什么是极简主义
 

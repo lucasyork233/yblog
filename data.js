@@ -1,20 +1,20 @@
 // 博客数据 - 使用全局变量获取文章内容
 const blogs = [
   {
-    slug: 'hello-world',
-    title: 'Hello World',
+    slug: 'post-01',
+    title: 'first blog',
     date: '2026-01-01',
     summary: '这是我的第一篇博客文章，欢迎大家来到我的博客。',
-    tags: ['hello', 'introduction'],
-    content: window.helloWorldContent
+    tags: ['introduction'],
+    content: window.post01Content
   },
   {
-    slug: 'my-second-post',
-    title: '我的第二篇文章',
+    slug: 'post-02',
+    title: 'minimalism',
     date: '2026-01-05',
     summary: '探索极简主义设计的魅力。',
     tags: ['design', 'minimalism'],
-    content: window.mySecondPostContent
+    content: window.post02Content
   }
 ];
 
