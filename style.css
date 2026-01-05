@@ -62,6 +62,63 @@ body {
   text-align: center;
 }
 
+.home-card {
+  width: 400px;
+  height: 320px;
+  background: var(--card);
+  border-radius: 40px;
+  border: 1px solid var(--border);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  position: relative;
+  box-shadow: 0 40px 50px -32px rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  transition: transform 0.3s ease;
+}
+
+.home-card:hover {
+  transform: scale(1.02);
+}
+
+.avatar {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 0.5rem;
+}
+
+.greeting {
+  font-size: 1.375rem;
+  font-weight: 500;
+  color: var(--primary);
+  line-height: 1.2;
+}
+
+.intro {
+  font-size: 1.375rem;
+  font-weight: 500;
+  color: var(--primary);
+  line-height: 1.2;
+}
+
+.name {
+  color: #3b82f6;
+  font-weight: 700;
+}
+
+.nice-to-meet {
+  font-size: 1.375rem;
+  font-weight: 500;
+  color: var(--primary);
+  line-height: 1.2;
+}
+
 .home-title {
   font-size: 2rem;
   font-weight: 600;

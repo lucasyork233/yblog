@@ -38,16 +38,29 @@ const Router = {
 
   renderHome() {
     const app = document.getElementById('app');
+
+    // 根据时间获取问候语
+    const hour = new Date().getHours();
+    let greeting = 'Good Morning';
+    if (hour >= 12 && hour < 18) {
+      greeting = 'Good Afternoon';
+    } else if (hour >= 18) {
+      greeting = 'Good Evening';
+    }
+
     app.innerHTML = `
       <div class="page home-page">
-        <div class="card">
-          <h1 class="home-title">yBlog</h1>
+        <div class="home-card">
+          <img src="avatar.jpg" alt="Avatar" class="avatar">
+          <div class="greeting">${greeting}.</div>
+          <div class="intro">I'm <span class="name">LucasYork</span>.</div>
+          <div class="nice-to-meet">Nice to meet you!</div>
         </div>
       </div>
     `;
 
     // 点击卡片跳转到博客列表
-    const card = app.querySelector('.card');
+    const card = app.querySelector('.home-card');
     card.style.cursor = 'pointer';
     card.addEventListener('click', () => this.navigate('#blog'));
   },
