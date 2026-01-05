@@ -32,7 +32,7 @@ export default function BlogPost() {
         
         const contentRes = await fetch(`/blogs/${slug}/index.md`)
         const markdown = await contentRes.text()
-        const html = marked(markdown)
+        const html = await marked(markdown)
         
         setBlog({
           title: blogInfo.title,
