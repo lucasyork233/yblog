@@ -844,19 +844,6 @@ body {
 .prose pre code .attr { color: #a6e22e; }
 .prose pre code .value { color: #e6db74; }
 
-/* 代码语言标签 */
-.prose pre::before {
-  content: attr(class);
-  position: absolute;
-  top: 0; right: 0;
-  background: rgba(239, 68, 68, 0.2);
-  color: #f8f8f2;
-  padding: 0.25rem 0.5rem;
-  font-size: 0.75rem;
-  border-bottom-left-radius: 4px;
-  font-family: monospace;
-  opacity: 0.7;
-}
 
 /* 优化的列表样式 - 统一对齐，缩短标记距离 */
 .prose ul li {

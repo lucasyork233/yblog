@@ -365,35 +365,95 @@ function buildTable(table) {
 // 代码高亮
 function highlightCode(code, lang) {
   if (!code) return '';
-  
+
+  // 通用：先转义 HTML 特殊字符
   let highlighted = code
     .replace(/&/g, '&')
     .replace(/</g, '<')
     .replace(/>/g, '>');
-  
+
   if (lang === 'javascript' || lang === 'js') {
-    highlighted = highlighted
-      .replace(/\b(function|const|let|var|return|if|else|for|while|new|class|extends|import|export|async|await|typeof|instanceof)\b/g, '<span class="keyword">$1</span>')
-      .replace(/(['"`])(.*?)\1/g, '<span class="string">$1$2$1</span>')
-      .replace(/\/\/.*/g, '<span class="comment">$&</span>')
-      .replace(/\/\*[\s\S]*?\*\//g, '<span class="comment">$&</span>')
-      .replace(/\b(\d+)\b/g, '<span class="number">$1</span>')
-      .replace(/\b(true|false|null|undefined)\b/g, '<span class="literal">$1</span>')
-      .replace(/\b([a-zA-Z_]\w*)\s*\(/g, '<span class="function">$1</span>(');
+    // 使用占位符保护字符串，避免内部内容被处理
+    const placeholders = [];
+    let idx = 0;
+
+    // 1. 保护字符串
+    highlighted = highlighted.replace(/(['"`])(.*?)\1/g, (match) => {
+      const ph = `___STR_${idx}___`;
+      placeholders.push({ ph, original: match, type: 'string' });
+      return ph;
+    });
+
+    // 2. 保护注释
+    highlighted = highlighted.replace(/\/\/.*/g, (match) => {
+      const ph = `___CMT_${idx}___`;
+      placeholders.push({ ph, original: match, type: 'comment' });
+      return ph;
+    });
+    highlighted = highlighted.replace(/\/\*[\s\S]*?\*\//g, (match) => {
+      const ph = `___CMT_${idx}___`;
+      placeholders.push({ ph, original: match, type: 'comment' });
+      return ph;
+    });
+
+    // 3. 高亮关键词
+    highlighted = highlighted.replace(/\b(function|const|let|var|return|if|else|for|while|new|class|extends|import|export|async|await|typeof|instanceof)\b/g, '<span class="keyword">$1</span>');
+
+    // 4. 高亮数字和字面量
+    highlighted = highlighted.replace(/\b(\d+)\b/g, '<span class="number">$1</span>');
+    highlighted = highlighted.replace(/\b(true|false|null|undefined)\b/g, '<span class="literal">$1</span>');
+
+    // 5. 高亮函数名
+    highlighted = highlighted.replace(/\b([a-zA-Z_]\w*)\s*\(/g, '<span class="function">$1</span>(');
+
+    // 6. 恢复字符串和注释并高亮
+    placeholders.forEach(({ ph, original, type }) => {
+      const className = type === 'string' ? 'string' : 'comment';
+      highlighted = highlighted.replace(ph, `<span class="${className}">${original}</span>`);
+    });
+
+    return highlighted;
+
   } else if (lang === 'css') {
-    highlighted = highlighted
-      .replace(/([a-z-]+)\s*:/g, '<span class="property">$1</span>:')
-      .replace(/(['"`])(.*?)\1/g, '<span class="string">$1$2$1</span>')
-      .replace(/\/\*[\s\S]*?\*\//g, '<span class="comment">$&</span>')
-      .replace(/#\w+/g, '<span class="color">$&</span>')
-      .replace(/\b(\d+)(px|em|rem|%)\b/g, '<span class="number">$1</span><span class="unit">$2</span>');
+    const placeholders = [];
+    let idx = 0;
+
+    // 1. 保护字符串
+    highlighted = highlighted.replace(/(['"`])(.*?)\1/g, (match) => {
+      const ph = `___STR_${idx}___`;
+      placeholders.push({ ph, original: match });
+      return ph;
+    });
+
+    // 2. 保护注释
+    highlighted = highlighted.replace(/\/\*[\s\S]*?\*\//g, (match) => {
+      const ph = `___CMT_${idx}___`;
+      placeholders.push({ ph, original: match });
+      return ph;
+    });
+
+    // 3. 高亮属性名
+    highlighted = highlighted.replace(/([a-z-]+)\s*:/g, '<span class="property">$1</span>:');
+
+    // 4. 高亮颜色
+    highlighted = highlighted.replace(/#\w+/g, '<span class="color">$&</span>');
+
+    // 5. 高亮数字和单位
+    highlighted = highlighted.replace(/\b(\d+)(px|em|rem|%)\b/g, '<span class="number">$1</span><span class="unit">$2</span>');
+
+    // 6. 恢复字符串和注释并高亮
+    placeholders.forEach(({ ph, original }) => {
+      const type = original.startsWith('/*') ? 'comment' : 'string';
+      highlighted = highlighted.replace(ph, `<span class="${type}">${original}</span>`);
+    });
+
+    return highlighted;
+
   } else if (lang === 'html' || lang === 'xml') {
-    highlighted = highlighted
-      .replace(/<(\/?)([a-z-]+)/gi, '<$1<span class="tag">$2</span>')
-      .replace(/([a-z-]+)=/gi, '<span class="attr">$1</span>=')
-      .replace(/=['"](.*?)['"]/gi, '=<span class="value">"$1"</span>');
+    // HTML 只转义，不高亮
+    return highlighted;
   }
-  
+
   return highlighted;
 }
 
