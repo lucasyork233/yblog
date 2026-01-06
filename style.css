@@ -858,14 +858,14 @@ body {
   opacity: 0.7;
 }
 
-/* 优化的列表样式 - 一层标记 */
+/* 优化的列表样式 - 统一对齐，缩短标记距离 */
 .prose ul li {
   margin-top: 0.25em;
   margin-bottom: 0.25em;
   line-height: 1.5;
   list-style: none;
   position: relative;
-  padding-left: 0.75em;
+  padding-left: 1.5em; /* 缩短标记与文字距离 */
 }
 
 .prose ul li::before {
@@ -875,12 +875,15 @@ body {
   color: var(--accent);
   font-weight: bold;
   font-size: 1.2em;
+  width: 0.8em; /* 缩短标记宽度 */
+  text-align: left;
 }
 
-/* 有序列表 - 一层标记 */
+/* 有序列表 - 与无序列表对齐 */
 .prose ol {
   counter-reset: item;
   list-style: none;
+  margin-left: 0;
 }
 
 .prose ol li {
@@ -890,7 +893,7 @@ body {
   counter-increment: item;
   list-style: none;
   position: relative;
-  padding-left: 1.25em;
+  padding-left: 1.5em; /* 与无序列表相同的距离 */
 }
 
 .prose ol li::before {
@@ -899,28 +902,36 @@ body {
   left: 0;
   color: var(--accent);
   font-weight: 600;
-  width: 1.25em;
-  text-align: right;
+  width: 0.8em; /* 与无序列表相同的宽度 */
+  text-align: right; /* 数字右对齐，让文字起始位置一致 */
+  margin-right: 0.2em; /* 减少数字后间距 */
 }
 
-/* 列表嵌套 */
+/* 列表嵌套 - 统一减少缩进 */
 .prose ul ul,
 .prose ol ol,
 .prose ul ol,
 .prose ol ul {
   margin-top: 0.25em;
   margin-bottom: 0.25em;
-  padding-left: 1.25em;
+  padding-left: 0.6em; /* 进一步减少嵌套缩进 */
   list-style: none;
 }
 
+/* 无序列表嵌套标记 */
 .prose ul ul li::before {
   content: '◦';
-  font-size: 1em;
+  font-size: 1.1em;
+  width: 0.8em;
+  text-align: left;
 }
 
+/* 有序列表嵌套标记 */
 .prose ol ol li::before {
   content: counter(item) ".";
+  width: 0.8em;
+  text-align: right;
+  margin-right: 0.2em;
 }
 
 /* 分割线 - 简化版本 */
