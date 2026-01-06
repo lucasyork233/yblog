@@ -307,7 +307,14 @@ function buildList(items, type) {
   for (const group of groups) {
     for (const item of group.items) {
       const content = item.item;
-      html += `<li>${content}${item.sublist || ''}</li>`;
+      // 检查内容是否已经包含列表标记
+      if (content.match(/^[-*+]\s+/) || content.match(/^\d+\.\s+/)) {
+        // 移除行首的列表标记和空格
+        const cleanContent = content.replace(/^[-*+]\s+/, '').replace(/^\d+\.\s+/, '');
+        html += `<li>${cleanContent}${item.sublist || ''}</li>`;
+      } else {
+        html += `<li>${content}${item.sublist || ''}</li>`;
+      }
     }
   }
   html += `</${type}>`;
