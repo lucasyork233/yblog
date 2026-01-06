@@ -107,8 +107,8 @@ function parseMarkdown(markdown) {
     return `[[[CODEBLOCK_${index}]]]`;
   });
   
-  // 2. 表格保护
-  content = content.replace(/(\|.*\|)\n(\|[-:\s|]+\|)\n((?:\|.*\|\n?)*)/g, (match, header, separator, rows) => {
+  // 2. 表格保护 - 修复正则表达式以正确捕获表格
+  content = content.replace(/(\|.*\|)\n(\|[-:\s|]+\|)\n((?:\|.*\|(?:\n|$))*)/g, (match, header, separator, rows) => {
     const index = blocks.table.length;
     blocks.table.push({ header, separator, rows });
     return `[[[TABLE_${index}]]]`;
@@ -331,28 +331,35 @@ function buildTable(table) {
   // 分析对齐方式
   const alignments = separatorCells.map(cell => {
     const trimmed = cell.trim();
-    if (trimmed.startsWith(':') && trimmed.endsWith(':')) return 'center';
-    if (trimmed.endsWith(':')) return 'right';
+    const hasLeftColon = trimmed.startsWith(':');
+    const hasRightColon = trimmed.endsWith(':');
+    
+    if (hasLeftColon && hasRightColon) return 'center';
+    if (hasRightColon && !hasLeftColon) return 'right';
+    if (hasLeftColon && !hasRightColon) return 'left';
     return 'left';
   });
   
-  let html = '<table><thead><tr>';
+  // 构建表格内容
+  let tableContent = '<thead><tr>';
   headerCells.forEach((cell, i) => {
-    html += `<th style="text-align: ${alignments[i] || 'left'}">${cell}</th>`;
+    tableContent += `<th style="text-align: ${alignments[i]}">${cell}</th>`;
   });
-  html += '</tr></thead><tbody>';
+  tableContent += '</tr></thead><tbody>';
   
   rows.forEach(row => {
     const cells = row.split('|').filter(c => c.trim() !== '').map(c => c.trim());
-    html += '<tr>';
+    tableContent += '<tr>';
     cells.forEach((cell, i) => {
-      html += `<td style="text-align: ${alignments[i] || 'left'}">${cell}</td>`;
+      tableContent += `<td style="text-align: ${alignments[i]}">${cell}</td>`;
     });
-    html += '</tr>';
+    tableContent += '</tr>';
   });
   
-  html += '</tbody></table>';
-  return html;
+  tableContent += '</tbody>';
+  
+  // 返回完整的HTML结构：容器 + 滚动容器 + 表格
+  return `<div class="table-container"><div class="table-scroll"><table>${tableContent}</table></div></div>`;
 }
 
 // 代码高亮
