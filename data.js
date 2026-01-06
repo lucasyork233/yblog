@@ -12,7 +12,6 @@ const BlogManager = {
   // 加载文章脚本
   async loadPosts() {
     // 自动扫描 posts 目录下的所有文章文件
-    // 这里我们使用一个简单的约定：所有 post-*.js 文件都是文章
     const postFiles = await this.scanPostFiles();
     
     // 使用 Promise.all 并行加载所有文章
@@ -21,8 +20,10 @@ const BlogManager = {
         const script = document.createElement('script');
         script.src = `posts/${file}`;
         script.onload = () => {
-          // 从文件名提取变量名（如 post-01.js -> post01）
-          const varName = file.replace('.js', '').replace('-', '');
+          // 从文件名提取变量名（如 post-01.js -> post01, test-markdown.js -> testMarkdown）
+          const baseName = file.replace('.js', '');
+          // 处理带连字符的情况，转换为驼峰命名（支持数字和字母）
+          const varName = baseName.replace(/-([a-z0-9])/gi, (g) => g[1].toUpperCase());
           if (window[varName]) {
             this.posts.push(window[varName]);
           }
@@ -44,7 +45,6 @@ const BlogManager = {
   },
   
   // 扫描 posts 目录下的文章文件
-  // 从配置文件中读取文章列表
   scanPostFiles() {
     // 检查是否已经加载了配置文件
     if (typeof window !== 'undefined' && window.POST_FILES) {
@@ -89,60 +89,298 @@ const BlogManager = {
   }
 };
 
-// Markdown 解析器
+// 成熟的 Markdown 解析器 - 采用分层处理架构
 function parseMarkdown(markdown) {
-  let html = markdown.replace(/\\n/g, '\n');
+  // 预处理：统一换行符
+  let content = markdown.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
   
-  // 代码块
-  html = html.replace(/```(\w*)\n([\s\S]*?)```/g, '<pre><code>$2</code></pre>');
-  // 行内代码
-  html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
-  // 标题
-  html = html.replace(/^### (.+)$/gm, '<h3>$1</h3>');
-  html = html.replace(/^## (.+)$/gm, '<h2>$1</h2>');
-  html = html.replace(/^# (.+)$/gm, '<h1>$1</h1>');
-  // 引用
-  html = html.replace(/^> (.+)$/gm, '<blockquote>$1</blockquote>');
-  // 粗体
-  html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-  // 斜体
-  html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
-  // 无序列表
-  html = html.replace(/^\- (.+)$/gm, '<li>$1</li>');
-  html = html.replace(/(<li>.*<\/li>\n?)+/g, '<ul>$&</ul>');
-  // 有序列表
-  html = html.replace(/^\d+\. (.+)$/gm, '<li>$1</li>');
+  // 第一层：保护复杂块元素（代码块、表格）
+  const blocks = {
+    code: [],
+    table: []
+  };
   
-  // 段落处理
-  html = html.replace(/<\/pre>/g, '[[[PREEND]]]');
-  html = html.replace(/<h[1-6]>/g, '[[[HEADING]]]');
-  html = html.replace(/<\/h[1-6]>/g, '[[[HEADINGEND]]]');
+  // 1. 代码块保护
+  content = content.replace(/```(\w*)\n([\s\S]*?)```/g, (match, lang, code) => {
+    const index = blocks.code.length;
+    blocks.code.push({ lang, code });
+    return `[[[CODEBLOCK_${index}]]]`;
+  });
   
-  const paragraphs = html.split(/\n\n+/);
-  html = paragraphs.map(p => {
-    p = p.trim();
-    if (!p) return '';
-    if (p.includes('[[[PREEND]]]') || p.includes('[[[HEADING]]]')) return p;
-    return `<p>${p}</p>`;
-  }).join('');
-
-  html = html.replace(/\n/g, '<br>');
-  html = html.replace(/\[\[\[PREEND\]\]\]/g, '</pre>');
-  html = html.replace(/\[\[\[HEADING\]\]\]/g, '');
-  html = html.replace(/\[\[\[HEADINGEND\]\]\]/g, '');
-
-  // 清理空段落
-  html = html.replace(/<p><\/p>/g, '');
-  html = html.replace(/<p>(<h[1-6]>)/g, '$1');
-  html = html.replace(/(<\/h[1-6]>)<\/p>/g, '$1');
-  html = html.replace(/<p>(<ul>)/g, '$1');
-  html = html.replace(/(<\/ul>)<\/p>/g, '$1');
-  html = html.replace(/<p>(<pre>)/g, '$1');
-  html = html.replace(/(<\/pre>)<\/p>/g, '$1');
-  html = html.replace(/<p>(<blockquote>)/g, '$1');
-  html = html.replace(/(<\/blockquote>)<\/p>/g, '$1');
-
+  // 2. 表格保护
+  content = content.replace(/(\|.*\|)\n(\|[-:\s|]+\|)\n((?:\|.*\|\n?)*)/g, (match, header, separator, rows) => {
+    const index = blocks.table.length;
+    blocks.table.push({ header, separator, rows });
+    return `[[[TABLE_${index}]]]`;
+  });
+  
+  // 第二层：块级元素解析
+  // 3. 分割线
+  content = content.replace(/^\s*(\*\*\*|---|___)\s*$/gm, '[[[HR]]]');
+  
+  // 4. 标题解析（按级别从高到低）
+  const headings = [];
+  content = content.replace(/^(#{1,6})\s+(.+?)\s*$/gm, (match, hashes, text) => {
+    const level = hashes.length;
+    const index = headings.length;
+    headings.push({ level, text });
+    return `[[[HEADING_${index}]]]`;
+  });
+  
+  // 5. 引用块
+  const blockquotes = [];
+  content = content.replace(/^(> .+(?:\n> .+)*)/gm, (match) => {
+    const lines = match.split('\n').map(l => l.replace(/^> /, ''));
+    const index = blockquotes.length;
+    blockquotes.push(lines.join('\n'));
+    return `[[[BLOCKQUOTE_${index}]]]`;
+  });
+  
+  // 6. 列表（无序）
+  const ulLists = [];
+  content = content.replace(/^(\s*)[-*+]\s+(.+)$/gm, (match, indent, item) => {
+    const index = ulLists.length;
+    ulLists.push({ indent: indent.length, item });
+    return `[[[UL_${index}]]]`;
+  });
+  
+  // 7. 列表（有序）
+  const olLists = [];
+  content = content.replace(/^(\s*)(\d+)\.\s+(.+)$/gm, (match, indent, num, item) => {
+    const index = olLists.length;
+    olLists.push({ indent: indent.length, num: parseInt(num), item });
+    return `[[[OL_${index}]]]`;
+  });
+  
+  // 第三层：行内元素解析
+  // 8. 粗体和斜体（按顺序处理，避免冲突）
+  content = content.replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>');
+  content = content.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  content = content.replace(/\*(.+?)\*/g, '<em>$1</em>');
+  
+  // 9. 行内代码
+  content = content.replace(/`([^`]+)`/g, '<code>$1</code>');
+  
+  // 10. 链接和图片
+  content = content.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img alt="$1" src="$2">');
+  content = content.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>');
+  
+  // 11. 自动链接
+  content = content.replace(/(?<!["'=\]])((https?:\/\/|www\.)[^\s<]+)/gi, (match) => {
+    const url = match.startsWith('www.') ? 'http://' + match : match;
+    return `<a href="${url}" target="_blank">${match}</a>`;
+  });
+  
+  // 12. 转义字符
+  content = content.replace(/\\([`*_{}\[\]()#+\-.!])/g, '$1');
+  
+  // 第四层：段落处理
+  // 13. 分割内容为段落（保留单换行）
+  const lines = content.split('\n');
+  const paragraphs = [];
+  let currentPara = [];
+  
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i].trim();
+    
+    if (line === '') {
+      if (currentPara.length > 0) {
+        paragraphs.push(currentPara.join('\n'));
+        currentPara = [];
+      }
+    } else if (line.startsWith('[[[') && line.endsWith(']]]')) {
+      // 特殊块元素，单独成段
+      if (currentPara.length > 0) {
+        paragraphs.push(currentPara.join('\n'));
+        currentPara = [];
+      }
+      paragraphs.push(line);
+    } else {
+      currentPara.push(line);
+    }
+  }
+  
+  if (currentPara.length > 0) {
+    paragraphs.push(currentPara.join('\n'));
+  }
+  
+  // 第五层：重构 HTML
+  let html = '';
+  
+  for (const para of paragraphs) {
+    if (para === '[[[HR]]]') {
+      html += '<hr>';
+    } else if (para.startsWith('[[[HEADING_')) {
+      const index = parseInt(para.match(/\d+/)[0]);
+      const heading = headings[index];
+      html += `<h${heading.level}>${heading.text}</h${heading.level}>`;
+    } else if (para.startsWith('[[[BLOCKQUOTE_')) {
+      const index = parseInt(para.match(/\d+/)[0]);
+      const content = blockquotes[index];
+      // 递归解析引用内容
+      const innerHtml = parseMarkdown(content);
+      html += `<blockquote>${innerHtml}</blockquote>`;
+    } else if (para.startsWith('[[[UL_')) {
+      // 处理连续的无序列表
+      const listItems = [];
+      let i = paragraphs.indexOf(para);
+      while (i < paragraphs.length && paragraphs[i].startsWith('[[[UL_')) {
+        const index = parseInt(paragraphs[i].match(/\d+/)[0]);
+        listItems.push(ulLists[index]);
+        i++;
+      }
+      // 跳过已处理的
+      const skipCount = listItems.length;
+      
+      // 构建嵌套列表
+      html += buildList(listItems, 'ul');
+      // 调整索引
+      const currentIdx = paragraphs.indexOf(para);
+      paragraphs.splice(currentIdx + 1, skipCount - 1);
+      
+    } else if (para.startsWith('[[[OL_')) {
+      // 处理连续的有序列表
+      const listItems = [];
+      let i = paragraphs.indexOf(para);
+      while (i < paragraphs.length && paragraphs[i].startsWith('[[[OL_')) {
+        const index = parseInt(paragraphs[i].match(/\d+/)[0]);
+        listItems.push(olLists[index]);
+        i++;
+      }
+      const skipCount = listItems.length;
+      
+      html += buildList(listItems, 'ol');
+      const currentIdx = paragraphs.indexOf(para);
+      paragraphs.splice(currentIdx + 1, skipCount - 1);
+      
+    } else if (para.startsWith('[[[CODEBLOCK_')) {
+      const index = parseInt(para.match(/\d+/)[0]);
+      const block = blocks.code[index];
+      const highlighted = highlightCode(block.code, block.lang);
+      html += `<pre><code class="language-${block.lang}">${highlighted}</code></pre>`;
+    } else if (para.startsWith('[[[TABLE_')) {
+      const index = parseInt(para.match(/\d+/)[0]);
+      const table = blocks.table[index];
+      html += buildTable(table);
+    } else if (para.trim() !== '') {
+      // 普通段落
+      html += `<p>${para}</p>`;
+    }
+  }
+  
   return html;
+}
+
+// 构建列表（支持嵌套）
+function buildList(items, type) {
+  if (items.length === 0) return '';
+  
+  // 按缩进分组
+  const groups = [];
+  let currentGroup = { indent: items[0].indent, items: [items[0]] };
+  
+  for (let i = 1; i < items.length; i++) {
+    if (items[i].indent === currentGroup.indent) {
+      currentGroup.items.push(items[i]);
+    } else if (items[i].indent > currentGroup.indent) {
+      // 子列表开始
+      const subItems = [items[i]];
+      let j = i + 1;
+      while (j < items.length && items[j].indent > currentGroup.indent) {
+        subItems.push(items[j]);
+        j++;
+      }
+      // 递归处理子列表
+      const subList = buildList(subItems, type);
+      currentGroup.items[currentGroup.items.length - 1].sublist = subList;
+      i = j - 1;
+    } else {
+      // 缩进减少，新组开始
+      groups.push(currentGroup);
+      currentGroup = { indent: items[i].indent, items: [items[i]] };
+    }
+  }
+  groups.push(currentGroup);
+  
+  // 构建 HTML
+  let html = `<${type}>`;
+  for (const group of groups) {
+    for (const item of group.items) {
+      const content = item.item;
+      html += `<li>${content}${item.sublist || ''}</li>`;
+    }
+  }
+  html += `</${type}>`;
+  
+  return html;
+}
+
+// 构建表格
+function buildTable(table) {
+  const headerCells = table.header.split('|').filter(c => c.trim() !== '').map(c => c.trim());
+  const separatorCells = table.separator.split('|').filter(c => c.trim() !== '');
+  const rows = table.rows.trim().split('\n').filter(r => r.trim() !== '');
+  
+  // 分析对齐方式
+  const alignments = separatorCells.map(cell => {
+    const trimmed = cell.trim();
+    if (trimmed.startsWith(':') && trimmed.endsWith(':')) return 'center';
+    if (trimmed.endsWith(':')) return 'right';
+    return 'left';
+  });
+  
+  let html = '<table><thead><tr>';
+  headerCells.forEach((cell, i) => {
+    html += `<th style="text-align: ${alignments[i] || 'left'}">${cell}</th>`;
+  });
+  html += '</tr></thead><tbody>';
+  
+  rows.forEach(row => {
+    const cells = row.split('|').filter(c => c.trim() !== '').map(c => c.trim());
+    html += '<tr>';
+    cells.forEach((cell, i) => {
+      html += `<td style="text-align: ${alignments[i] || 'left'}">${cell}</td>`;
+    });
+    html += '</tr>';
+  });
+  
+  html += '</tbody></table>';
+  return html;
+}
+
+// 代码高亮
+function highlightCode(code, lang) {
+  if (!code) return '';
+  
+  let highlighted = code
+    .replace(/&/g, '&')
+    .replace(/</g, '<')
+    .replace(/>/g, '>');
+  
+  if (lang === 'javascript' || lang === 'js') {
+    highlighted = highlighted
+      .replace(/\b(function|const|let|var|return|if|else|for|while|new|class|extends|import|export|async|await|typeof|instanceof)\b/g, '<span class="keyword">$1</span>')
+      .replace(/(['"`])(.*?)\1/g, '<span class="string">$1$2$1</span>')
+      .replace(/\/\/.*/g, '<span class="comment">$&</span>')
+      .replace(/\/\*[\s\S]*?\*\//g, '<span class="comment">$&</span>')
+      .replace(/\b(\d+)\b/g, '<span class="number">$1</span>')
+      .replace(/\b(true|false|null|undefined)\b/g, '<span class="literal">$1</span>')
+      .replace(/\b([a-zA-Z_]\w*)\s*\(/g, '<span class="function">$1</span>(');
+  } else if (lang === 'css') {
+    highlighted = highlighted
+      .replace(/([a-z-]+)\s*:/g, '<span class="property">$1</span>:')
+      .replace(/(['"`])(.*?)\1/g, '<span class="string">$1$2$1</span>')
+      .replace(/\/\*[\s\S]*?\*\//g, '<span class="comment">$&</span>')
+      .replace(/#\w+/g, '<span class="color">$&</span>')
+      .replace(/\b(\d+)(px|em|rem|%)\b/g, '<span class="number">$1</span><span class="unit">$2</span>');
+  } else if (lang === 'html' || lang === 'xml') {
+    highlighted = highlighted
+      .replace(/<(\/?)([a-z-]+)/gi, '<$1<span class="tag">$2</span>')
+      .replace(/([a-z-]+)=/gi, '<span class="attr">$1</span>=')
+      .replace(/=['"](.*?)['"]/gi, '=<span class="value">"$1"</span>');
+  }
+  
+  return highlighted;
 }
 
 // 格式化日期
