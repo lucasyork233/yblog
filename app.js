@@ -33,6 +33,11 @@ const Router = {
       return;
     }
 
+    if (hash === '#about') {
+      this.renderAbout();
+      return;
+    }
+
     const detailMatch = hash.match(/^#blog\/(.+)$/);
     if (detailMatch) {
       const slug = detailMatch[1];
@@ -62,9 +67,18 @@ const Router = {
     `;
 
     const card = app.querySelector('.home-card');
-    card.addEventListener('click', () => {
+    const nameLink = app.querySelector('.name');
+
+    card.addEventListener('click', (e) => {
+      if (e.target === nameLink) return;
       card.style.transform = 'scale(0.95)';
       setTimeout(() => this.navigate('#blog'), 100);
+    });
+
+    nameLink.addEventListener('click', (e) => {
+      e.stopPropagation();
+      nameLink.style.transform = 'scale(0.95)';
+      setTimeout(() => this.navigate('#about'), 100);
     });
 
     document.addEventListener('keydown', (e) => {
@@ -221,6 +235,38 @@ const Router = {
     backLink.addEventListener('click', (e) => {
       e.preventDefault();
       this.navigate('#home');
+    });
+  },
+
+  renderAbout() {
+    const app = document.getElementById('app');
+
+    app.innerHTML = `
+      <div class="container about-page">
+        <article class="card">
+          <div class="about-header">
+            <img src="avatar.jpg" alt="LucasYork" class="about-avatar">
+            <h1 class="about-title">About Me</h1>
+          </div>
+          <div class="about-content">
+            <p>Hi, I'm LucasYork, a programming enthusiast.</p>
+            <p>I code in C++, Golang, and Python. Beyond programming, I enjoy music, running, and reading.</p>
+            <p>This blog is where I share my technical journey and thoughts.</p>
+          </div>
+          <a href="#home" class="back-link" data-tooltip="Back to Home">Back to Home</a>
+        </article>
+      </div>
+    `;
+
+    const backLink = app.querySelector('.back-link');
+    backLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      backLink.style.transform = 'translateX(-4px)';
+      setTimeout(() => this.navigate('#home'), 100);
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') this.navigate('#home');
     });
   }
 };
