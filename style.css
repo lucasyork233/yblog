@@ -668,13 +668,12 @@ body {
 
 .prose blockquote {
   border-left: 4px solid var(--accent);
-  padding-left: 1.25rem;
+  padding: 0.75rem 1rem;
   margin-top: 1.75em;
   margin-bottom: 1.75em;
   color: var(--text-secondary);
   font-style: italic;
   background: rgba(239, 68, 68, 0.05);
-  padding: 1rem 1.25rem;
   border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
 }
 

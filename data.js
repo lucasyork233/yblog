@@ -217,9 +217,14 @@ function parseMarkdown(markdown) {
     } else if (para.startsWith('[[[BLOCKQUOTE_')) {
       const index = parseInt(para.match(/\d+/)[0]);
       const content = blockquotes[index];
-      // 递归解析引用内容
-      const innerHtml = parseMarkdown(content);
-      html += `<blockquote>${innerHtml}</blockquote>`;
+      // 将换行符转换为 <br>，然后递归解析每一行
+      const lines = content.split('\n');
+      const parsedLines = lines.map(line => {
+        const parsed = parseMarkdown(line);
+        // 去掉 parseMarkdown 可能添加的 <p> 标签
+        return parsed.replace(/^<p>(.*)<\/p>$/, '$1');
+      });
+      html += `<blockquote>${parsedLines.join('<br>')}</blockquote>`;
     } else if (para.startsWith('[[[UL_')) {
       // 处理连续的无序列表
       const listItems = [];
