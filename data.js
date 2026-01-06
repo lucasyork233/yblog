@@ -311,20 +311,47 @@ function buildList(items, type) {
   let html = `<${type}>`;
   for (const group of groups) {
     for (const item of group.items) {
-      const content = item.item;
-      // 检查内容是否已经包含列表标记
-      if (content.match(/^[-*+]\s+/) || content.match(/^\d+\.\s+/)) {
-        // 移除行首的列表标记和空格
-        const cleanContent = content.replace(/^[-*+]\s+/, '').replace(/^\d+\.\s+/, '');
-        html += `<li>${cleanContent}${item.sublist || ''}</li>`;
-      } else {
-        html += `<li>${content}${item.sublist || ''}</li>`;
-      }
+      let content = item.item;
+      // 移除行首的列表标记和空格
+      content = content.replace(/^[-*+]\s+/, '').replace(/^\d+\.\s+/, '');
+
+      // 解析行内元素（粗体、斜体、代码、链接等）
+      content = parseInlineElements(content);
+
+      html += `<li>${content}${item.sublist || ''}</li>`;
     }
   }
   html += `</${type}>`;
-  
+
   return html;
+}
+
+// 解析行内元素
+function parseInlineElements(text) {
+  let content = text;
+
+  // 粗体和斜体（按顺序处理，避免冲突）
+  content = content.replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>');
+  content = content.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  content = content.replace(/\*(.+?)\*/g, '<em>$1</em>');
+
+  // 行内代码
+  content = content.replace(/`([^`]+)`/g, '<code>$1</code>');
+
+  // 链接和图片
+  content = content.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img alt="$1" src="$2">');
+  content = content.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>');
+
+  // 自动链接
+  content = content.replace(/(?<!["'=\]])((https?:\/\/|www\.)[^\s<]+)/gi, (match) => {
+    const url = match.startsWith('www.') ? 'http://' + match : match;
+    return `<a href="${url}" target="_blank">${match}</a>`;
+  });
+
+  // 转义字符
+  content = content.replace(/\\([`*_{}\[\]()#+\-.!])/g, '$1');
+
+  return content;
 }
 
 // 构建表格
