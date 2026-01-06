@@ -13,7 +13,7 @@ const BlogManager = {
   async loadPosts() {
     // 自动扫描 posts 目录下的所有文章文件
     const postFiles = await this.scanPostFiles();
-    
+
     // 使用 Promise.all 并行加载所有文章
     const loadPromises = postFiles.map(file => {
       return new Promise((resolve) => {
@@ -25,7 +25,10 @@ const BlogManager = {
           // 处理带连字符的情况，转换为驼峰命名（支持数字和字母）
           const varName = baseName.replace(/-([a-z0-9])/gi, (g) => g[1].toUpperCase());
           if (window[varName]) {
-            this.posts.push(window[varName]);
+            const post = window[varName];
+            // 记录文件名用于排序
+            post._fileName = file;
+            this.posts.push(post);
           }
           resolve();
         };
@@ -36,12 +39,19 @@ const BlogManager = {
         document.head.appendChild(script);
       });
     });
-    
+
     // 等待所有文章加载完成
     await Promise.all(loadPromises);
-    
-    // 按日期排序（最新的在前）
-    this.posts.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+    // 按文件名倒序排序（最新的在前）
+    this.posts.sort((a, b) => {
+      // 比较文件名
+      if (a._fileName && b._fileName) {
+        return b._fileName.localeCompare(a._fileName);
+      }
+      // 如果没有文件名，回退到日期排序
+      return new Date(b.date) - new Date(a.date);
+    });
   },
   
   // 扫描 posts 目录下的文章文件
