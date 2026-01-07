@@ -1,4 +1,3 @@
-// 测试文章：成熟的Markdown解析器测试
 window.post007 = {
   slug: 'post-007',
   title: 'Markdown解析 - 测试',

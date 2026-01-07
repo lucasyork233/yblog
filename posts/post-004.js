@@ -1,4 +1,3 @@
-// 文章：Markdown 功能展示
 window.post004 = {
   slug: 'post-004',
   title: 'Markdown解析 - 表格',

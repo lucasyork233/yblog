@@ -1,4 +1,3 @@
-// 文章：极简主义的艺术
 window.post002 = {
   slug: 'post-002',
   title: 'Markdown解析 - 标题',

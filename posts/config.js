@@ -13,6 +13,7 @@ const POST_FILES = [
   'post-005.js',
   'post-006.js',
   'post-007.js',
+  'post-008.js',
 ];
 
 // 导出配置

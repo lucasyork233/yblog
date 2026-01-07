@@ -1,4 +1,3 @@
-// 文章：Markdown 完整测试
 window.post005 = {
   slug: 'post-005',
   title: 'Markdown解析 - 代码块',

@@ -1,4 +1,3 @@
-// 探索：markdown 解析
 window.post003 = {
   slug: 'post-003',
   title: 'Markdown解析 - 列表',

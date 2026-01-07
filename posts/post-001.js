@@ -1,4 +1,3 @@
-// 文章：初见 · 你好
 window.post001 = {
   slug: 'post-001',
   title: 'first blog',

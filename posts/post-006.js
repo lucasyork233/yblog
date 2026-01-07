@@ -1,4 +1,3 @@
-// 测试文章：成熟的Markdown解析器测试
 window.post006 = {
   slug: 'post-006',
   title: 'Markdown解析 - 引用',
