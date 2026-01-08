@@ -155,15 +155,23 @@ const Router = {
     const contentHtml = parseMarkdown(blog.content);
 
         app.innerHTML = `
-          <div class="container blog-detail">
-            <article class="card">
-              <h1 class="blog-detail-title">${blog.title}</h1>
-              <p class="blog-detail-date">${fullDate}</p>
-              <div class="prose">${contentHtml}</div>
-              <a href="#blog" class="back-link" data-tooltip="返回列表">返回列表</a>
-            </article>
+          <div class="blog-detail-page">
+            <div class="container blog-detail">
+              <article class="card">
+                <h1 class="blog-detail-title">${blog.title}</h1>
+                <p class="blog-detail-date">${fullDate}</p>
+                <div class="prose">${contentHtml}</div>
+                <a href="#blog" class="back-link" data-tooltip="返回列表">返回列表</a>
+              </article>
+            </div>
+            <aside class="toc">
+              <div class="toc-title">目录</div>
+            </aside>
           </div>
         `;
+
+    // 生成并渲染TOC
+    this.generateAndRenderTOC();
 
     const backLink = app.querySelector('.back-link');
     backLink.addEventListener('click', (e) => {
@@ -761,6 +769,57 @@ const Router = {
 
     loadEventsFromStorage();
     renderEvents();
+  },
+
+  // 生成并渲染TOC
+  generateAndRenderTOC() {
+    const prose = document.querySelector('.prose');
+    if (!prose) return;
+
+    const headings = prose.querySelectorAll('h1, h2, h3');
+    if (headings.length === 0) return;
+
+    const tocContainer = document.querySelector('.toc');
+    if (!tocContainer) return;
+
+    // 给标题添加ID
+    headings.forEach((heading, index) => {
+      heading.id = `heading-${index}`;
+    });
+
+    // 生成TOC HTML
+    let tocHtml = '<ul class="toc-list">';
+
+    headings.forEach((heading, index) => {
+      const level = parseInt(heading.tagName.charAt(1));
+      const text = heading.textContent;
+      const id = `heading-${index}`;
+
+      if (level === 1) {
+        tocHtml += `<li class="toc-item toc-h1"><a href="#${id}" class="toc-link">${text}</a></li>`;
+      } else if (level === 2) {
+        tocHtml += `<li class="toc-item toc-h2"><a href="#${id}" class="toc-link">${text}</a></li>`;
+      } else if (level === 3) {
+        tocHtml += `<li class="toc-item toc-h3"><a href="#${id}" class="toc-link">${text}</a></li>`;
+      }
+    });
+
+    tocHtml += '</ul>';
+
+    tocContainer.innerHTML = `<div class="toc-title">目录</div>${tocHtml}`;
+
+    // 添加点击事件
+    const tocLinks = document.querySelectorAll('.toc-link');
+    tocLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetId = link.getAttribute('href').substring(1);
+        const targetElement = document.getElementById(targetId);
+        if (targetElement) {
+          targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
   }
 };
 
