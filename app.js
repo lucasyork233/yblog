@@ -67,7 +67,7 @@ const Router = {
 
     app.innerHTML = `
       <div class="page home-page">
-        <div class="home-card" data-tooltip="点击进入博客">
+        <div class="home-card">
           <img src="avatar.jpg" alt="Avatar" class="avatar">
           <div class="greeting">${greeting}.</div>
           <div class="intro">I'm <span class="name">LucasYork</span>.</div>

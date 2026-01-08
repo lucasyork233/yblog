@@ -355,16 +355,6 @@ body {
   position: relative;
 }
 
-.blog-list-header::before {
-  content: '✦';
-  position: absolute;
-  top: -20px;
-  left: 50%;
-  transform: translateX(-50%);
-  color: var(--accent);
-  font-size: 0.875rem;
-  opacity: 0.5;
-}
 
 .blog-list-header::after {
   content: '';
@@ -1374,6 +1364,8 @@ body {
   font-size: 2.2rem;
   margin-bottom: 5px;
   color: var(--text-primary);
+  position: relative;
+  display: inline-block;
 }
 
 .events-container header p {
