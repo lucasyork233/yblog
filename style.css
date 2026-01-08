@@ -202,6 +202,7 @@ body {
   opacity: 0;
   transition: opacity var(--transition-base);
   animation: shimmer 3s ease-in-out infinite;
+  pointer-events: none;
 }
 
 .home-card::after {
@@ -212,6 +213,7 @@ body {
   opacity: 0;
   transition: opacity var(--transition-base);
   border-radius: var(--radius-lg);
+  pointer-events: none;
 }
 
 @keyframes shimmer {
@@ -283,6 +285,7 @@ body {
   font-weight: 700;
   position: relative;
   display: inline-block;
+  text-decoration: none;
 }
 
 .name::after {

@@ -70,7 +70,7 @@ const Router = {
         <div class="home-card">
           <img src="avatar.jpg" alt="Avatar" class="avatar">
           <div class="greeting">${greeting}.</div>
-          <div class="intro">I'm <span class="name">LucasYork</span>.</div>
+          <div class="intro">I'm <a href="#about" class="name">LucasYork</a>.</div>
           <div class="nice-to-meet">Nice to meet you!</div>
         </div>
       </div>
@@ -80,15 +80,9 @@ const Router = {
     const nameLink = app.querySelector('.name');
 
     card.addEventListener('click', (e) => {
-      if (e.target === nameLink) return;
+      if (e.target.closest('.name') === nameLink) return;
       card.style.transform = 'scale(0.95)';
       setTimeout(() => this.navigate('#blog'), 100);
-    });
-
-    nameLink.addEventListener('click', (e) => {
-      e.stopPropagation();
-      nameLink.style.transform = 'scale(0.95)';
-      setTimeout(() => this.navigate('#about'), 100);
     });
 
     document.addEventListener('keydown', (e) => {
@@ -123,7 +117,7 @@ const Router = {
       </div>
     `;
 
-    document.querySelectorAll('.blog-item').forEach(item => {
+    document.querySelectorAll('.blog-item').forEach((item, index) => {
       item.addEventListener('click', (e) => {
         e.preventDefault();
         const slug = item.dataset.slug;
@@ -132,8 +126,8 @@ const Router = {
       });
 
       setTimeout(() => {
-        item.style.animation = 'itemEnter 0.4s ease forwards';
-      }, index * 50);
+        item.style.animation = 'itemEnter 0.5s ease forwards';
+      }, index * 60);
     });
 
     if (!document.getElementById('list-animations')) {
