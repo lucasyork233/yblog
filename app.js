@@ -18,6 +18,15 @@ const Router = {
     const hash = window.location.hash;
     const app = document.getElementById('app');
 
+    // 移除可能存在的TOC
+    const existingToc = document.querySelector('.toc');
+    if (existingToc) {
+      existingToc.remove();
+    }
+
+    // 滚动到顶部
+    window.scrollTo(0, 0);
+
     setTimeout(() => {
       app.style.opacity = '1';
       app.style.transform = 'scale(1)';
@@ -154,6 +163,12 @@ const Router = {
     const fullDate = formatDate(blog.date, 'full');
     const contentHtml = parseMarkdown(blog.content);
 
+        // 先在body创建TOC
+        const tocElement = document.createElement('aside');
+        tocElement.className = 'toc';
+        tocElement.innerHTML = '<div class="toc-title">目录</div>';
+        document.body.appendChild(tocElement);
+
         app.innerHTML = `
           <div class="blog-detail-page">
             <div class="container blog-detail">
@@ -164,9 +179,6 @@ const Router = {
                 <a href="#blog" class="back-link" data-tooltip="返回列表">返回列表</a>
               </article>
             </div>
-            <aside class="toc">
-              <div class="toc-title">目录</div>
-            </aside>
           </div>
         `;
 

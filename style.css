@@ -475,7 +475,7 @@ body {
 /* 博客详情页 */
 .blog-detail-page {
   position: relative;
-  max-width: 1200px;
+  max-width: 100%;
   margin: 0 auto;
   padding: 0 var(--space-lg);
 }
@@ -522,19 +522,20 @@ body {
 
 /* TOC 样式 */
 .toc {
-  position: absolute;
-  right: calc(var(--space-lg) - 66px);
+  display: block;
+  position: fixed;
+  left: 50%;
+  margin-left: 450px;
   top: 3rem;
-  width: 200px;
+  width: 250px;
   max-height: calc(100vh - var(--space-2xl) * 2);
   overflow-y: auto;
   padding: var(--space-lg);
-  background: var(--bg-card);
+  background: var(--bg-primary);
   border-radius: var(--radius-md);
   border: 1px solid var(--border-light);
   box-shadow: var(--shadow-sm);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  z-index: 1000;
 }
 
 .toc-title {
