@@ -1,0 +1,32 @@
+// 彩蛋配置文件
+// 每次添加新彩蛋时，在这里注册
+
+const EASTER_EGGS = [
+  {
+    id: 'clock',
+    name: '番茄时钟',
+    description: 'Pomodoro Timer',
+    file: 'clock.js',
+    icon: '🍅'
+  },
+  {
+    id: 'events',
+    name: '每日事件',
+    description: 'Daily Event List',
+    file: 'events.js',
+    icon: '📝'
+  },
+  // 示例彩蛋（取消注释以启用）
+  {
+    id: 'example',
+    name: '示例彩蛋',
+    description: 'Example Easter Egg',
+    file: 'example.js',
+    icon: '🎁'
+  }
+];
+
+// 导出配置
+if (typeof window !== 'undefined') {
+  window.EASTER_EGGS = EASTER_EGGS;
+}
