@@ -1,6 +1,15 @@
 // 博客数据
 const blogs = [
   {
+    "slug": "post-010",
+    "title": "upgrade eggs sys",
+    "date": "2026-01-18T00:00:00.000Z",
+    "summary": "升级彩蛋系统",
+    "tags": [
+      "eggs"
+    ]
+  },
+  {
     "slug": "post-009",
     "title": "canvas fish",
     "date": "2026-01-16T00:00:00.000Z",
@@ -84,7 +93,7 @@ const blogs = [
     "slug": "post-001",
     "title": "first blog",
     "date": "2026-01-01T00:00:00.000Z",
-    "summary": "这是我的第一篇博客文章，欢迎大家来到我的数字花园。",
+    "summary": "第一篇博客",
     "tags": [
       "introduction"
     ]

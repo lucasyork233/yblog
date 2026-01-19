@@ -32,3 +32,10 @@ yarn-error.log*
 
 # vscode
 .history/
+.vscode/
+
+# claude
+.claude/
+
+# post
+posts-md/

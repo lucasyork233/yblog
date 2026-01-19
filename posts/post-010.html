@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>upgrade eggs sys</title>
+</head>
+<body>
+  <article data-slug="post-010" data-title="upgrade eggs sys" data-date="Sun Jan 18 2026 08:00:00 GMT+0800 (中国标准时间)" data-summary="升级彩蛋系统" data-tags="eggs">
+    <p><h2>文件结构</h2></p><p><pre><code class="language-plaintext">├── easter-eggs/        # 彩蛋目录
+│   ├── config.js         # 配置文件（注册彩蛋）
+│   ├── manager.js        # 管理器（自动加载）
+│   ├── egg1.js           # 彩蛋1
+│   └── egg2.js           # 彩蛋2
+├── index.html          # 引入管理器
+└── app.js              # 使用管理器路由</code></pre></p><p><h2>添加彩蛋步骤</h2></p><p><h3>步骤 1：创建彩蛋文件</h3></p><p>在 <code>easter-eggs/</code> 目录创建 <code>new-egg.js</code></p><p><pre><code class="language-javascript">const NewEggEasterEgg = {
+  // 渲染页面
+  render(app, navigate) {
+    app.innerHTML = `
+      &lt;div class="page"&gt;
+        &lt;div class="card"&gt;
+          &lt;h1&gt;🎁 我的彩蛋&lt;/h1&gt;
+          &lt;p&gt;这是一个新彩蛋！&lt;/p&gt;
+          &lt;button onclick="location.hash='#home'"&gt;返回首页&lt;/button&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    `;
+
+    // 添加事件监听
+    document.getElementById('backBtn').addEventListener('click', () =&gt; {
+      navigate('#home');
+    });
+  }
+};
+
+// 注册到全局
+if (typeof window !== 'undefined') {
+  window.NewEggEasterEgg = NewEggEasterEgg;
+}</code></pre></p><p><h3>步骤 2：注册彩蛋</h3></p><p>编辑 <code>easter-eggs/config.js</code>，添加配置：</p><p><pre><code class="language-javascript">const EASTER_EGGS = [
+  {
+    id: 'clock',                    // 路由 ID（访问 #clock）
+    name: '番茄时钟',                // 显示名称
+    description: 'Pomodoro Timer',  // 描述
+    file: 'clock.js',               // 文件名
+    icon: '🍅'                     // 图标（可选）
+  },
+  // ...
+
+  // 添加新彩蛋
+  {
+    id: 'new-egg',         // 新彩蛋的 ID
+    name: '新的彩蛋',
+    description: 'New Egg',
+    file: 'new-egg.js',
+    icon: '🎁'
+  }
+];</code></pre></p><p><h2>彩蛋开发指南</h2></p><p><h3>render 方法</h3></p><p>每个彩蛋必须实现 <code>render(app, navigate)</code> 方法：</p><p><ul>
+<li><code>app</code>: DOM 元素，用于渲染内容
+</li>
+<li><code>navigate</code>: 导航函数，用于跳转到其他页面
+</li>
+</ul></p><p><pre><code class="language-javascript">render(app, navigate) {
+  // 1. 渲染 HTML
+  app.innerHTML = `...`;
+  
+  // 2. 添加事件监听
+  document.getElementById('myBtn').addEventListener('click', () =&gt; {
+    navigate('#home');  // 跳转到首页
+  });
+  
+  // 3. 初始化逻辑（可选）
+  this.initMyLogic();
+}</code></pre></p><p><h3>样式</h3></p><p>彩蛋可以使用 <code>style.css</code> 中已有的样式类，或者在 render 方法中添加自定义样式：</p><p><pre><code class="language-javascript">render(app, navigate) {
+  app.innerHTML = `
+    &lt;style&gt;
+      .my-custom-class {
+        color: red;
+      }
+    &lt;/style&gt;
+    &lt;div class="page"&gt;
+      &lt;div class="card my-custom-class"&gt;
+        内容
+      &lt;/div&gt;
+    &lt;/div&gt;
+  `;
+}</code></pre></p><p><h3>数据持久化</h3></p><p>使用 <code>localStorage</code> 保存数据：</p><p><pre><code class="language-javascript">// 保存
+localStorage.setItem('newEggData', JSON.stringify(data));
+
+// 读取
+const data = JSON.parse(localStorage.getItem('newEggData') || '{}');</code></pre></p><p><h3>最佳实践</h3></p><p><ol>
+<li><strong>模块化</strong>：将复杂逻辑拆分成多个方法
+</li>
+<li><strong>清理资源</strong>：如果使用了定时器或事件监听，记得在页面切换时清理
+</li>
+<li><strong>响应式设计</strong>：确保在移动设备上也能正常显示
+</li>
+<li><strong>错误处理</strong>：添加适当的错误处理和用户提示
+</li>
+</ol></p><p><h2>示例：完整的彩蛋模板</h2></p><p><pre><code class="language-javascript">// 模板彩蛋
+const TemplateEasterEgg = {
+  // 状态变量
+  timer: null,
+  
+  // 渲染页面
+  render(app, navigate) {
+    app.innerHTML = `
+      &lt;div class="page"&gt;
+        &lt;div class="card"&gt;
+          &lt;h1&gt;模板彩蛋&lt;/h1&gt;
+          &lt;div id="content"&gt;&lt;/div&gt;
+          &lt;button id="backBtn"&gt;返回&lt;/button&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    `;
+    
+    // 绑定事件
+    document.getElementById('backBtn').addEventListener('click', () =&gt; {
+      this.cleanup();
+      navigate('#home');
+    });
+    
+    // 初始化
+    this.init();
+  },
+  
+  // 初始化逻辑
+  init() {
+    this.loadData();
+    this.startTimer();
+  },
+  
+  // 加载数据
+  loadData() {
+    const data = localStorage.getItem('templateData');
+    // 处理数据...
+  },
+  
+  // 启动定时器
+  startTimer() {
+    this.timer = setInterval(() =&gt; {
+      // 定时任务...
+    }, 1000);
+  },
+  
+  // 清理资源
+  cleanup() {
+    if (this.timer) {
+      clearInterval(this.timer);
+      this.timer = null;
+    }
+  }
+};
+
+// 注册到全局
+if (typeof window !== 'undefined') {
+  window.TemplateEasterEgg = TemplateEasterEgg;
+}</code></pre></p><p><h2>技术细节</h2></p><p><h3>命名规则</h3></p><p><ul>
+<li><strong>文件名</strong>：小写 + 连字符，如 <code>new-egg.js</code>
+</li>
+<li><strong>对象名</strong>：驼峰 + EasterEgg，如 <code>NewEggEasterEgg</code>
+</li>
+<li><strong>转换规则</strong>：<code>new-egg</code> → <code>NewEggEasterEgg</code>
+</li>
+</ul></p><p><h3>路由机制</h3></p><p><ol>
+<li>用户访问 <code>#new-egg</code>
+</li>
+<li>路由系统检测到彩蛋 ID
+</li>
+<li>管理器查找对应的彩蛋配置
+</li>
+<li>自动加载并渲染彩蛋
+</li>
+</ol></p><p><h3>API 说明</h3></p><p><h4>render(app, navigate)</h4></p><p>每个彩蛋必须实现此方法</p><p><pre><code class="language-javascript">render(app, navigate) {
+  // app: DOM 元素，用于渲染内容
+  // navigate: 函数，用于页面跳转
+  
+  app.innerHTML = `&lt;div&gt;内容&lt;/div&gt;`;
+  
+  // 跳转示例
+  navigate('#home');    // 跳转到首页
+  navigate('#blog');    // 跳转到博客列表
+}</code></pre></p><p><h2>升级优势</h2></p><p><h3>之前（硬编码）</h3></p><p><pre><code class="language-javascript">// app.js 中需要添加多处代码
+if (hash === '#clock') {
+  this.renderClock();
+  return;
+}
+
+renderClock() {
+  // 大量代码...
+}
+
+initClock() {
+  // 更多代码...
+}</code></pre></p><p><h3>现在（配置化）</h3></p><p><pre><code class="language-javascript">// 1. 创建文件 easter-eggs/new-egg.js
+// 2. 在 config.js 添加一行配置
+// 完成！</code></pre></p>
+  </article>
+</body>
+</html>

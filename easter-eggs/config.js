@@ -16,14 +16,15 @@ const EASTER_EGGS = [
     file: 'events.js',
     icon: '📝'
   },
+
   // 示例彩蛋（取消注释以启用）
-  {
-    id: 'example',
-    name: '示例彩蛋',
-    description: 'Example Easter Egg',
-    file: 'example.js',
-    icon: '🎁'
-  }
+  // {
+  //   id: 'example',
+  //   name: '示例彩蛋',
+  //   description: 'Example Easter Egg',
+  //   file: 'example.js',
+  //   icon: '🎁'
+  // }
 ];
 
 // 导出配置
