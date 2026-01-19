@@ -43,19 +43,26 @@ npm run build
 ```
 yblog/
 ├── index.html         # 主入口
-├── style.css          # 样式系统
-├── app.js             # 路由和交互逻辑
-├── data.js            # 博客数据管理器
-├── avatar.jpg         # 头像
-├── images/            # 图片
-├── tools/             # 脚本工具
-├── easter-eggs/       # 彩蛋目录
-│   ├── config.js        # 配置文件（注册彩蛋）
-│   ├── manager.js       # 管理器（自动加载）
-│   ├── egg1.js          # 彩蛋1
+├── assets/images/         # 图片
+├── tools/                 # 脚本工具
+├── css/
+│   ├── base.css           # 基础样式
+│   ├── components.css     # 组件样式
+│   ├── pages.css          # 页面样式
+│   ├── prose.css          # 文章样式
+│   ├── easter-eggs.css    # 彩蛋样式
+│   └── responsive.css     # 响应式
+├── js/
+│   ├── utils.js           # 工具函数
+│   ├── fish-animation.js  # 动画逻辑
+│   └── router.js          # 路由系统
+├── easter-eggs/
+│   ├── config.js          # 配置文件（注册彩蛋）
+│   ├── manager.js         # 管理器（自动加载）
+│   ├── egg1.js
 │   └── egg2.js
-├── posts/             # 解析后的文章 .html
-└── posts-md/          # 博客目录
-    ├── post-001.md      # 文章1
+├── posts/                 # 解析后的文章 .html
+└── posts-md/              # 博客目录
+    ├── post-001.md
     └── post-002.md
 ```

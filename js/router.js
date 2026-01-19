@@ -1,4 +1,5 @@
 // 路由系统
+
 const Router = {
   init() {
     window.addEventListener('hashchange', () => this.handleRoute());
@@ -86,7 +87,7 @@ const Router = {
     app.innerHTML = `
       <div class="page home-page">
         <div class="home-card">
-          <img src="avatar.jpg" alt="Avatar" class="avatar">
+          <img src="assets/avatar.jpg" alt="Avatar" class="avatar">
           <div class="greeting">${greeting}.</div>
           <div class="intro">I'm <a href="#about" class="name">LucasYork</a>.</div>
           <div class="nice-to-meet">Nice to meet you!</div>
@@ -211,24 +212,24 @@ const Router = {
     const fullDate = formatDate(blog.date, 'full');
     const contentHtml = article.innerHTML;
 
-        // 先在body创建TOC
-        const tocElement = document.createElement('aside');
-        tocElement.className = 'toc';
-        tocElement.innerHTML = '<div class="toc-title">目录</div>';
-        document.body.appendChild(tocElement);
+    // 先在body创建TOC
+    const tocElement = document.createElement('aside');
+    tocElement.className = 'toc';
+    tocElement.innerHTML = '<div class="toc-title">目录</div>';
+    document.body.appendChild(tocElement);
 
-        app.innerHTML = `
-          <div class="blog-detail-page">
-            <div class="container blog-detail">
-              <article class="card">
-                <h1 class="blog-detail-title">${blog.title}</h1>
-                <p class="blog-detail-date">${fullDate}</p>
-                <div class="prose">${contentHtml}</div>
-                <a href="#blog" class="back-link" data-tooltip="返回列表">返回列表</a>
-              </article>
-            </div>
-          </div>
-        `;
+    app.innerHTML = `
+      <div class="blog-detail-page">
+        <div class="container blog-detail">
+          <article class="card">
+            <h1 class="blog-detail-title">${blog.title}</h1>
+            <p class="blog-detail-date">${fullDate}</p>
+            <div class="prose">${contentHtml}</div>
+            <a href="#blog" class="back-link" data-tooltip="返回列表">返回列表</a>
+          </article>
+        </div>
+      </div>
+    `;
 
     // 生成并渲染TOC
     this.generateAndRenderTOC();
@@ -322,7 +323,7 @@ const Router = {
       <div class="container about-page">
         <article class="card">
           <div class="about-header">
-            <img src="avatar.jpg" alt="LucasYork" class="about-avatar">
+            <img src="assets/avatar.jpg" alt="LucasYork" class="about-avatar">
             <h1 class="about-title">About Me</h1>
           </div>
           <div class="about-content">
@@ -396,263 +397,6 @@ const Router = {
         }
       });
     });
-  }
-};
-
-// 鱼游动动画
-var FISH_RENDERER = {
-  POINT_INTERVAL: 5,
-  FISH_COUNT: 3,
-  MAX_INTERVAL_COUNT: 50,
-  INIT_HEIGHT_RATE: .5,
-  THRESHOLD: 50,
-  WATCH_INTERVAL: 100,
-  FISH_COLOR: 'rgba(30, 120, 200, 0.8)',
-  animationId: null,
-  
-  init: function () {
-    this.setParameters();
-    this.reconstructMethods();
-    this.setup();
-    this.bindEvent();
-    this.render();
-  },
-  
-  destroy: function () {
-    if (this.animationId) {
-      cancelAnimationFrame(this.animationId);
-      this.animationId = null;
-    }
-    this.points = [];
-    this.fishes = [];
-  },
-  
-  setParameters: function () {
-    this.$container = document.getElementById('j-fish-skip');
-    if (!this.$container) return;
-    this.$canvas = document.createElement('canvas');
-    this.context = this.$canvas.getContext('2d');
-    this.$container.appendChild(this.$canvas);
-    this.points = [];
-    this.fishes = [];
-    this.watchIds = [];
-  },
-  
-  createSurfacePoints: function () {
-    var t = Math.round(this.width / this.POINT_INTERVAL);
-    this.pointInterval = this.width / (t - 1);
-    this.points.push(new FISH_SURFACE_POINT(this, 0));
-    for (var i = 1; i < t; i++) {
-      var e = new FISH_SURFACE_POINT(this, i * this.pointInterval),
-        h = this.points[i - 1];
-      e.setPreviousPoint(h);
-      h.setNextPoint(e);
-      this.points.push(e);
-    }
-  },
-  
-  reconstructMethods: function () {
-    this.watchWindowSize = this.watchWindowSize.bind(this);
-    this.jdugeToStopResize = this.jdugeToStopResize.bind(this);
-    this.render = this.render.bind(this);
-  },
-  
-  setup: function () {
-    if (!this.$container) return;
-    this.points.length = 0;
-    this.fishes.length = 0;
-    this.watchIds.length = 0;
-    this.intervalCount = this.MAX_INTERVAL_COUNT;
-    this.width = this.$container.offsetWidth;
-    this.height = this.$container.offsetHeight;
-    this.fishCount = Math.floor(this.FISH_COUNT * this.width / 500 * this.height / 500);
-    this.$canvas.width = this.width;
-    this.$canvas.height = this.height;
-    this.reverse = false;
-    this.fishes.push(new FISH_FISH(this));
-    this.createSurfacePoints();
-  },
-  
-  watchWindowSize: function () {
-    this.clearTimer();
-    this.tmpWidth = window.innerWidth;
-    this.tmpHeight = window.innerHeight;
-    this.watchIds.push(setTimeout(this.jdugeToStopResize, this.WATCH_INTERVAL));
-  },
-  
-  clearTimer: function () {
-    while (this.watchIds.length > 0) {
-      clearTimeout(this.watchIds.pop());
-    }
-  },
-  
-  jdugeToStopResize: function () {
-    var t = window.innerWidth,
-      i = window.innerHeight,
-      e = t == this.tmpWidth && i == this.tmpHeight;
-    this.tmpWidth = t;
-    this.tmpHeight = i;
-    e && this.setup();
-  },
-  
-  bindEvent: function () {
-    if (!this.$container) return;
-    window.addEventListener('resize', this.watchWindowSize);
-  },
-  
-  controlStatus: function () {
-    for (var t = 0, i = this.points.length; t < i; t++) {
-      this.points[t].updateSelf();
-    }
-    for (t = 0, i = this.points.length; t < i; t++) {
-      this.points[t].updateNeighbors();
-    }
-    this.fishes.length < this.fishCount && 0 == --this.intervalCount && (this.intervalCount = this.MAX_INTERVAL_COUNT, this.fishes.push(new FISH_FISH(this)));
-  },
-  
-  render: function () {
-    this.animationId = requestAnimationFrame(this.render);
-    this.controlStatus();
-    this.context.clearRect(0, 0, this.width, this.height);
-    this.context.fillStyle = this.FISH_COLOR;
-    for (var t = 0, i = this.fishes.length; t < i; t++) {
-      this.fishes[t].render(this.context);
-    }
-    this.context.save();
-    this.context.globalCompositeOperation = 'xor';
-    this.context.beginPath();
-    this.context.moveTo(0, this.reverse ? 0 : this.height);
-    for (t = 0, i = this.points.length; t < i; t++) {
-      this.points[t].render(this.context);
-    }
-    this.context.lineTo(this.width, this.reverse ? 0 : this.height);
-    this.context.closePath();
-    this.context.fill();
-    this.context.restore();
-  }
-};
-
-var FISH_SURFACE_POINT = function (t, i) {
-  this.renderer = t;
-  this.x = i;
-  this.init();
-};
-
-FISH_SURFACE_POINT.prototype = {
-  SPRING_CONSTANT: .03,
-  SPRING_FRICTION: .9,
-  WAVE_SPREAD: .3,
-  ACCELARATION_RATE: .01,
-  
-  init: function () {
-    this.initHeight = this.renderer.height * this.renderer.INIT_HEIGHT_RATE;
-    this.height = this.initHeight;
-    this.fy = 0;
-    this.force = {
-      previous: 0,
-      next: 0
-    };
-  },
-  
-  setPreviousPoint: function (t) {
-    this.previous = t;
-  },
-  
-  setNextPoint: function (t) {
-    this.next = t;
-  },
-  
-  interfere: function (t, i) {
-    this.fy = this.renderer.height * this.ACCELARATION_RATE * (this.renderer.height - this.height - t >= 0 ? -1 : 1) * Math.abs(i);
-  },
-  
-  updateSelf: function () {
-    this.fy += this.SPRING_CONSTANT * (this.initHeight - this.height);
-    this.fy *= this.SPRING_FRICTION;
-    this.height += this.fy;
-  },
-  
-  updateNeighbors: function () {
-    this.previous && (this.force.previous = this.WAVE_SPREAD * (this.height - this.previous.height));
-    this.next && (this.force.next = this.WAVE_SPREAD * (this.height - this.next.height));
-  },
-  
-  render: function (t) {
-    this.previous && (this.previous.height += this.force.previous, this.previous.fy += this.force.previous);
-    this.next && (this.next.height += this.force.next, this.next.fy += this.force.next);
-    t.lineTo(this.x, this.renderer.height - this.height);
-  }
-};
-
-var FISH_FISH = function (t) {
-  this.renderer = t;
-  this.init();
-};
-
-FISH_FISH.prototype = {
-  GRAVITY: .4,
-  
-  init: function () {
-    this.direction = Math.random() < .5;
-    this.x = this.direction ? this.renderer.width + this.renderer.THRESHOLD : -this.renderer.THRESHOLD;
-    this.previousY = this.y;
-    this.vx = this.getRandomValue(4, 10) * (this.direction ? -1 : 1);
-    this.renderer.reverse ? (this.y = this.getRandomValue(1 * this.renderer.height / 10, 4 * this.renderer.height / 10), this.vy = this.getRandomValue(2, 5), this.ay = this.getRandomValue(.05, .2)) : (this.y = this.getRandomValue(6 * this.renderer.height / 10, 9 * this.renderer.height / 10), this.vy = this.getRandomValue(-5, -2), this.ay = this.getRandomValue(-.2, -.05));
-    this.isOut = false;
-    this.theta = 0;
-    this.phi = 0;
-  },
-  
-  getRandomValue: function (t, i) {
-    return t + (i - t) * Math.random();
-  },
-  
-  reverseVertical: function () {
-    this.isOut = !this.isOut;
-    this.ay *= -1;
-  },
-  
-  controlStatus: function (t) {
-    this.previousY = this.y;
-    this.x += this.vx;
-    this.y += this.vy;
-    this.vy += this.ay;
-    this.renderer.reverse ? this.y > this.renderer.height * this.renderer.INIT_HEIGHT_RATE ? (this.vy -= this.GRAVITY, this.isOut = true) : (this.isOut && (this.ay = this.getRandomValue(.05, .2)), this.isOut = false) : this.y < this.renderer.height * this.renderer.INIT_HEIGHT_RATE ? (this.vy += this.GRAVITY, this.isOut = true) : (this.isOut && (this.ay = this.getRandomValue(-.2, -.05)), this.isOut = false);
-    this.isOut || (this.theta += Math.PI / 20, this.theta %= 2 * Math.PI, this.phi += Math.PI / 30, this.phi %= 2 * Math.PI);
-    (this.vx > 0 && this.x > this.renderer.width + this.renderer.THRESHOLD || this.vx < 0 && this.x < -this.renderer.THRESHOLD) && this.init();
-  },
-  
-  render: function (t) {
-    t.save();
-    t.translate(this.x, this.y);
-    t.rotate(Math.PI + Math.atan2(this.vy, this.vx));
-    t.scale(1, this.direction ? 1 : -1);
-    t.beginPath();
-    t.moveTo(-30, 0);
-    t.bezierCurveTo(-20, 15, 15, 10, 40, 0);
-    t.bezierCurveTo(15, -10, -20, -15, -30, 0);
-    t.fill();
-    t.save();
-    t.translate(40, 0);
-    t.scale(.9 + .2 * Math.sin(this.theta), 1);
-    t.beginPath();
-    t.moveTo(0, 0);
-    t.quadraticCurveTo(5, 10, 20, 8);
-    t.quadraticCurveTo(12, 5, 10, 0);
-    t.quadraticCurveTo(12, -5, 20, -8);
-    t.quadraticCurveTo(5, -10, 0, 0);
-    t.fill();
-    t.restore();
-    t.save();
-    t.translate(-3, 0);
-    t.rotate((Math.PI / 3 + Math.PI / 10 * Math.sin(this.phi)) * (this.renderer.reverse ? -1 : 1));
-    t.beginPath();
-    this.renderer.reverse ? (t.moveTo(5, 0), t.bezierCurveTo(10, 10, 10, 30, 0, 40), t.bezierCurveTo(-12, 25, -8, 10, 0, 0)) : (t.moveTo(-5, 0), t.bezierCurveTo(-10, -10, -10, -30, 0, -40), t.bezierCurveTo(12, -25, 8, -10, 0, 0));
-    t.closePath();
-    t.fill();
-    t.restore();
-    t.restore();
-    this.controlStatus(t);
   }
 };
 

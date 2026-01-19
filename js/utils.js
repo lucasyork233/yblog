@@ -1,3 +1,5 @@
+// 工具函数和数据
+
 // 博客数据
 const blogs = [
   {
@@ -100,12 +102,16 @@ const blogs = [
   }
 ];
 
-// 日期格式化
+// 日期格式化函数
 function formatDate(dateStr, format = 'short') {
   const date = new Date(dateStr);
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, '0');
   const day = String(date.getDate()).padStart(2, '0');
-  if (format === 'full') return `${year}年${parseInt(month)}月${parseInt(day)}日`;
+  
+  if (format === 'full') {
+    return `${year}年${parseInt(month)}月${parseInt(day)}日`;
+  }
+  
   return `${year}-${month}-${day}`;
 }

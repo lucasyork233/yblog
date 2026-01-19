@@ -1,0 +1,143 @@
+/* 基础样式 - 变量、重置、通用样式 */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  /* 主色调 - 温暖的红色 */
+  --primary: #1f2937;
+  --accent: #ef4444;
+  --accent-light: #f87171;
+  --accent-dark: #dc2626;
+  
+  /* 色彩系统 */
+  --text-primary: #1f2937;
+  --text-secondary: #6b7280;
+  --text-tertiary: #9ca3af;
+  
+  /* 背景系统 */
+  --bg-main: #f9fafb;
+  --bg-subtle: #f3f4f6;
+  --bg-card: rgba(255, 255, 255, 0.85);
+  
+  /* 边框系统 */
+  --border-light: #e5e7eb;
+  --border-medium: #d1d5db;
+  
+  /* 阴影系统 */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  
+  /* 圆角系统 */
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 40px;
+  
+  /* 间距系统 */
+  --space-xs: 0.5rem;
+  --space-sm: 0.75rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+  
+  /* 过渡动画 */
+  --transition-fast: 0.15s ease;
+  --transition-base: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.5s ease;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background: linear-gradient(135deg, var(--bg-main) 0%, #ffffff 100%);
+  background-attachment: fixed;
+  color: var(--text-primary);
+  line-height: 1.618;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+#app {
+  min-height: 100vh;
+  animation: fadeIn 0.6s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 滚动条美化 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-subtle);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--text-tertiary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
+
+/* 选择文本样式 */
+::selection {
+  background: rgba(239, 68, 68, 0.2);
+  color: var(--text-primary);
+}
+
+/* 焦点样式 */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* 加载状态 */
+.loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* 工具提示 */
+[data-tooltip] {
+  position: relative;
+}
+
+[data-tooltip]::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-4px);
+  background: var(--text-primary);
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-fast);
+}
+
+[data-tooltip]:hover::after {
+  opacity: 1;
+}

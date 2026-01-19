@@ -1,0 +1,457 @@
+/* 文章内容样式 */
+
+.prose {
+  color: var(--text-primary);
+  line-height: 1.7;
+  font-size: 1.0625rem;
+  width: 100%;
+}
+
+.prose > * {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+/* 标题样式 */
+.prose h1 {
+  font-size: 2.0em;
+  font-weight: 700;
+  margin-top: 1.3em;
+  margin-bottom: 0.9em;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  position: relative;
+  padding-left: 1.2rem;
+}
+
+.prose h1::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.2em;
+  bottom: 0.2em;
+  width: 5px;
+  background: linear-gradient(180deg, var(--accent), var(--accent-light));
+  border-radius: 3px;
+}
+
+.prose h2 {
+  font-size: 1.625em;
+  font-weight: 700;
+  margin-top: 1em;
+  margin-bottom: 0.75em;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+  position: relative;
+  padding-left: 1.2rem;
+}
+
+.prose h2::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.2em;
+  bottom: 0.2em;
+  width: 5px;
+  background: linear-gradient(180deg, var(--accent), var(--accent-light));
+  border-radius: 3px;
+}
+
+.prose h3 {
+  font-size: 1.375em;
+  font-weight: 700;
+  margin-top: 1em;
+  margin-bottom: 0.75em;
+  color: var(--text-primary);
+  position: relative;
+  padding-left: 1.2rem;
+}
+
+.prose h3::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.2em;
+  bottom: 0.2em;
+  width: 5px;
+  background: linear-gradient(180deg, var(--accent), var(--accent-light));
+  border-radius: 3px;
+}
+
+.prose h4 {
+  font-size: 1.25em;
+  font-weight: 700;
+  margin-top: 1.3em;
+  margin-bottom: 0.75em;
+  color: var(--text-primary);
+  position: relative;
+  padding-left: 1.2rem;
+}
+
+.prose h4::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.2em;
+  bottom: 0.2em;
+  width: 5px;
+  background: linear-gradient(180deg, var(--accent), var(--accent-light));
+  border-radius: 3px;
+}
+
+.prose h5 {
+  font-size: 1.1em;
+  font-weight: 700;
+  margin-top: 1.3em;
+  margin-bottom: 0.6em;
+  color: var(--text-primary);
+  position: relative;
+  padding-left: 1.2rem;
+}
+
+.prose h5::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.2em;
+  bottom: 0.2em;
+  width: 5px;
+  background: linear-gradient(180deg, var(--accent), var(--accent-light));
+  border-radius: 3px;
+}
+
+.prose h6 {
+  font-size: 1em;
+  font-weight: 700;
+  margin-top: 1.3em;
+  margin-bottom: 0.5em;
+  color: var(--text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  position: relative;
+  padding-left: 1.2rem;
+}
+
+.prose h6::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.2em;
+  bottom: 0.2em;
+  width: 5px;
+  background: linear-gradient(180deg, var(--accent), var(--accent-light));
+  border-radius: 3px;
+}
+
+/* 段落 */
+.prose p {
+  margin-top: 1.25em;
+  margin-bottom: 1.25em;
+  color: var(--text-secondary);
+}
+
+/* 列表样式 */
+.prose ul,
+.prose ol {
+  margin-top: 1.25em;
+  margin-bottom: 1.25em;
+  padding-left: 1.5em;
+}
+
+.prose ul li {
+  margin-top: 0.25em;
+  margin-bottom: 0.25em;
+  line-height: 1.5;
+  list-style: none;
+  position: relative;
+  padding-left: 1.5em;
+}
+
+.prose ul li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-weight: bold;
+  font-size: 1.2em;
+  width: 0.8em;
+  text-align: left;
+}
+
+.prose ol {
+  counter-reset: item;
+  list-style: none;
+  margin-left: 0;
+}
+
+.prose ol li {
+  margin-top: 0.25em;
+  margin-bottom: 0.25em;
+  line-height: 1.5;
+  counter-increment: item;
+  list-style: none;
+  position: relative;
+  padding-left: 1.5em;
+}
+
+.prose ol li::before {
+  content: counter(item) ".";
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-weight: 600;
+  width: 0.8em;
+  text-align: right;
+  margin-right: 0.2em;
+}
+
+.prose ul ul,
+.prose ol ol,
+.prose ul ol,
+.prose ol ul {
+  margin-top: 0.25em;
+  margin-bottom: 0.25em;
+  padding-left: 0.6em;
+  list-style: none;
+}
+
+.prose ul ul li::before {
+  content: '◦';
+  font-size: 1.1em;
+  width: 0.8em;
+  text-align: left;
+}
+
+.prose ol ol li::before {
+  content: counter(item) ".";
+  width: 0.8em;
+  text-align: right;
+  margin-right: 0.2em;
+}
+
+/* Todo list */
+.prose li input[type="checkbox"] {
+  margin-right: 0.5em;
+  cursor: default;
+}
+
+.prose li:has(input[type="checkbox"])::before {
+  content: none;
+}
+
+.prose li:has(input[type="checkbox"]) {
+  padding-left: 0;
+  list-style: none;
+}
+
+/* 引用 */
+.prose blockquote {
+  border-left: 4px solid var(--accent);
+  padding: 0.75rem 1rem;
+  margin-top: 1.75em;
+  margin-bottom: 1.75em;
+  color: var(--text-secondary);
+  font-style: italic;
+  background: rgba(239, 68, 68, 0.05);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+/* 代码 */
+.prose code {
+  background: var(--bg-subtle);
+  padding: 0.25em 0.5em;
+  border-radius: 4px;
+  font-size: 0.9em;
+  font-family: 'Courier New', monospace;
+  color: var(--accent-dark);
+  border: 1px solid var(--border-light);
+}
+
+.prose pre {
+  background: #1e1e1e;
+  color: #f8f8f2;
+  padding: 1.25rem;
+  border-radius: var(--radius-md);
+  overflow-x: auto;
+  margin-top: 1.75em;
+  margin-bottom: 1.75em;
+  border: 1px solid #333;
+  box-shadow: var(--shadow-md);
+  position: relative;
+}
+
+.prose pre::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-light));
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+}
+
+.prose pre code {
+  background: transparent;
+  padding: 0;
+  color: inherit;
+  border: none;
+  font-size: 0.95em;
+  line-height: 1.6;
+}
+
+/* 代码高亮 */
+.prose pre code .keyword { color: #f92672; font-weight: bold; }
+.prose pre code .string { color: #a6e22e; }
+.prose pre code .comment { color: #75715e; font-style: italic; }
+.prose pre code .function { color: #66d9ef; }
+.prose pre code .number { color: #ae81ff; }
+.prose pre code .literal { color: #ae81ff; font-weight: bold; }
+.prose pre code .property { color: #66d9ef; }
+.prose pre code .color { color: #e6db74; }
+.prose pre code .unit { color: #f92672; }
+.prose pre code .tag { color: #f92672; }
+.prose pre code .attr { color: #a6e22e; }
+.prose pre code .value { color: #e6db74; }
+
+/* 链接 */
+.prose a {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 600;
+  position: relative;
+  transition: color var(--transition-fast);
+}
+
+.prose a::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform var(--transition-base);
+}
+
+.prose a:hover {
+  color: var(--accent-dark);
+}
+
+.prose a:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* 图片 */
+.prose img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius-md);
+  margin-top: 1.75em;
+  margin-bottom: 1.75em;
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-base);
+}
+
+.prose img:hover {
+  transform: scale(1.02);
+  box-shadow: var(--shadow-lg);
+}
+
+/* 分割线 */
+.prose hr {
+  border: none;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  margin-top: 3em;
+  margin-bottom: 3em;
+  position: relative;
+}
+
+.prose hr::after {
+  content: '✦ ✦ ✦';
+  position: absolute;
+  top: -0.6em;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg-card);
+  padding: 0 1rem;
+  color: var(--accent);
+  font-size: 1rem;
+  letter-spacing: 0.5em;
+  font-weight: bold;
+}
+
+/* 表格 */
+.prose table-container {
+  margin-top: 1.75em;
+  margin-bottom: 1.75em;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  overflow: hidden;
+  position: relative;
+}
+
+.prose table-scroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.prose table {
+  width: 100%;
+  min-width: 600px;
+  border-collapse: collapse;
+  background: var(--bg-card);
+  margin: 0;
+}
+
+.prose table tr:last-child td {
+  border-bottom: none;
+}
+
+.prose table thead {
+  background: linear-gradient(135deg, var(--accent), var(--accent-light));
+  color: white;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.prose table th {
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.875rem;
+  letter-spacing: 0.05em;
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: none;
+}
+
+.prose table tr:hover {
+  background: rgba(239, 68, 68, 0.03);
+}
+
+.prose table-scroll::-webkit-scrollbar {
+  height: 6px;
+}
+
+.prose table-scroll::-webkit-scrollbar-track {
+  background: var(--bg-subtle);
+  border-radius: 3px;
+}
+
+.prose table-scroll::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: 3px;
+}
+
+.prose table-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-dark);
+}

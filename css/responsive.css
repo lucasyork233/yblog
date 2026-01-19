@@ -1,0 +1,103 @@
+/* 响应式样式 */
+
+@media (max-width: 640px) {
+  :root {
+    --space-lg: 1rem;
+    --space-xl: 1.25rem;
+    --space-2xl: 1.5rem;
+  }
+
+  .page {
+    padding: var(--space-lg);
+  }
+
+  .container {
+    padding: 0 var(--space-md);
+  }
+
+  .home-card {
+    width: 100%;
+    height: auto;
+    min-height: 320px;
+    padding: var(--space-xl);
+  }
+
+  .avatar {
+    width: 140px;
+    height: 140px;
+  }
+
+  .greeting,
+  .intro,
+  .nice-to-meet {
+    font-size: 1.25rem;
+  }
+
+  .blog-list {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+  }
+
+  .blog-list-title {
+    font-size: 1.75rem;
+  }
+
+  .blog-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-sm);
+    padding: var(--space-lg);
+  }
+
+  .blog-item-date {
+    width: auto;
+    font-size: 0.8125rem;
+  }
+
+  .blog-item-tags {
+    align-self: flex-start;
+  }
+
+  .blog-detail-title {
+    font-size: 1.875rem;
+  }
+
+  .blog-detail-page {
+    padding: 0 var(--space-md);
+  }
+
+  .blog-detail {
+    padding-top: 2rem;
+    padding-bottom: 3rem;
+    padding-right: 0;
+  }
+
+  .toc {
+    display: none;
+  }
+
+  .prose {
+    font-size: 1rem;
+  }
+
+  .prose h1 {
+    font-size: 1.75em;
+  }
+
+  .prose h2 {
+    font-size: 1.375em;
+  }
+
+  .prose h3 {
+    font-size: 1.25em;
+  }
+
+  .prose pre {
+    padding: 1rem;
+    margin-left: -1rem;
+    margin-right: -1rem;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+  }
+}
