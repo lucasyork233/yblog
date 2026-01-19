@@ -1,1 +1,0 @@
-window.post004 = {"slug":"post-004","title":"markdown - table","date":"2026-01-06T00:00:00.000Z","summary":"测试表格","tags":["markdown","test"],"content":"## 左对齐\r\n\r\n| 功能 | 状态 | 说明 |\r\n| :--- | :--- | :--- |\r\n| 标题解析 | ✅ | 支持六级标题 |\r\n| 列表嵌套 | ✅ | 支持多级嵌套 |\r\n| 表格对齐 | ✅ | 左对齐 |\r\n| 代码高亮 | ✅ | JS/CSS/HTML |"};

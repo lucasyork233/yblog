@@ -138,7 +138,7 @@ const Router = {
         </div>
         ${blogItems || '<p style="text-align: center; color: var(--text-secondary);">暂无文章</p>'}
       </div>
-      <div id="j-fish-skip" style="position: fixed; bottom: 0; left: 0; right: 0; height: 153px; width: 100%;"></div>
+      <div id="j-fish-skip" style="position: relative; height: 153px; width: 100%; margin-top: auto;"></div>
     `;
 
     // 初始化鱼动画
@@ -181,30 +181,35 @@ const Router = {
       return;
     }
 
-    // 动态加载文章内容
-    const scriptId = `post-script-${slug}`;
-    if (!document.getElementById(scriptId)) {
-      const script = document.createElement('script');
-      script.id = scriptId;
-      script.src = `posts/${slug}.js`;
-      script.onload = () => this.renderBlogContent(blog, slug);
-      script.onerror = () => this.renderNotFound();
-      document.head.appendChild(script);
-    } else {
-      this.renderBlogContent(blog, slug);
-    }
+    // 加载 HTML 文章内容
+    fetch(`posts/${slug}.html`)
+      .then(response => {
+        if (!response.ok) {
+          console.error('Failed to load article:', response.status, response.statusText);
+          throw new Error('Article not found');
+        }
+        return response.text();
+      })
+      .then(html => this.renderBlogContent(blog, html))
+      .catch(error => {
+        console.error('Error loading article:', error);
+        this.renderNotFound();
+      });
   },
 
-  renderBlogContent(blog, slug) {
-    const postData = window[slug.replace(/-/g, '')];
-    if (!postData) {
+  renderBlogContent(blog, htmlContent) {
+    // 从 HTML 中提取文章内容
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(htmlContent, 'text/html');
+    const article = doc.querySelector('article');
+    if (!article) {
       this.renderNotFound();
       return;
     }
 
     const app = document.getElementById('app');
     const fullDate = formatDate(blog.date, 'full');
-    const contentHtml = parseMarkdown(postData.content);
+    const contentHtml = article.innerHTML;
 
         // 先在body创建TOC
         const tocElement = document.createElement('aside');
@@ -401,7 +406,8 @@ var FISH_RENDERER = {
   MAX_INTERVAL_COUNT: 50,
   INIT_HEIGHT_RATE: .5,
   THRESHOLD: 50,
-  FISH_COLOR: 'rgba(66, 185, 133, 0.8)',
+  WATCH_INTERVAL: 100,
+  FISH_COLOR: 'rgba(30, 120, 200, 0.8)',
   animationId: null,
   
   init: function () {
@@ -448,8 +454,6 @@ var FISH_RENDERER = {
   reconstructMethods: function () {
     this.watchWindowSize = this.watchWindowSize.bind(this);
     this.jdugeToStopResize = this.jdugeToStopResize.bind(this);
-    this.startEpicenter = this.startEpicenter.bind(this);
-    this.moveEpicenter = this.moveEpicenter.bind(this);
     this.render = this.render.bind(this);
   },
   
@@ -494,34 +498,6 @@ var FISH_RENDERER = {
   bindEvent: function () {
     if (!this.$container) return;
     window.addEventListener('resize', this.watchWindowSize);
-    this.$container.addEventListener('mouseenter', this.startEpicenter);
-    this.$container.addEventListener('mousemove', this.moveEpicenter);
-  },
-  
-  getAxis: function (t) {
-    var i = this.$container.getBoundingClientRect();
-    return {
-      x: t.clientX - i.left + window.scrollX,
-      y: t.clientY - i.top + window.scrollY
-    };
-  },
-  
-  startEpicenter: function (t) {
-    this.axis = this.getAxis(t);
-  },
-  
-  moveEpicenter: function (t) {
-    var i = this.getAxis(t);
-    this.axis || (this.axis = i);
-    this.generateEpicenter(i.x, i.y, i.y - this.axis.y);
-    this.axis = i;
-  },
-  
-  generateEpicenter: function (t, i, e) {
-    if (!(i < this.height / 2 - this.THRESHOLD || i > this.height / 2 + this.THRESHOLD)) {
-      var h = Math.round(t / this.pointInterval);
-      h < 0 || h >= this.points.length || this.points[h].interfere(i, e);
-    }
   },
   
   controlStatus: function () {
@@ -643,7 +619,6 @@ FISH_FISH.prototype = {
     this.vy += this.ay;
     this.renderer.reverse ? this.y > this.renderer.height * this.renderer.INIT_HEIGHT_RATE ? (this.vy -= this.GRAVITY, this.isOut = true) : (this.isOut && (this.ay = this.getRandomValue(.05, .2)), this.isOut = false) : this.y < this.renderer.height * this.renderer.INIT_HEIGHT_RATE ? (this.vy += this.GRAVITY, this.isOut = true) : (this.isOut && (this.ay = this.getRandomValue(-.2, -.05)), this.isOut = false);
     this.isOut || (this.theta += Math.PI / 20, this.theta %= 2 * Math.PI, this.phi += Math.PI / 30, this.phi %= 2 * Math.PI);
-    this.renderer.generateEpicenter(this.x + (this.direction ? -1 : 1) * this.renderer.THRESHOLD, this.y, this.y - this.previousY);
     (this.vx > 0 && this.x > this.renderer.width + this.renderer.THRESHOLD || this.vx < 0 && this.x < -this.renderer.THRESHOLD) && this.init();
   },
   

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>canvas fish</title>
+</head>
+<body>
+  <article data-slug="post-009" data-title="canvas fish" data-date="Fri Jan 16 2026 08:00:00 GMT+0800 (中国标准时间)" data-summary="canvas foot fish demo" data-tags="canvas,animation">
+    <p><h2>Canvas 鱼游动动画</h2></p><p>这是一个基于 HTML5 Canvas 的鱼游动动画效果。鱼会在水中自由游动，并且会与水面产生交互，产生波纹效果。</p><p><h2>实现原理</h2></p><p><h3>核心组件</h3></p><p><ol>
+<li><strong>RENDERER</strong> - 渲染器，管理整个画布和动画循环
+</li>
+<li><strong>SURFACE_POINT</strong> - 水面点，使用弹簧物理模拟水波纹
+</li>
+<li><strong>FISH</strong> - 鱼类对象，处理鱼的游动和绘制
+</li>
+</ol></p><p><h3>水面波纹模拟</h3></p><p><ul>
+<li>水面由一系列点组成，每个点都像弹簧一样：
+<ul>
+<li><strong>SPRING_CONSTANT</strong>: 弹簧常数，控制回复力
+</li>
+<li><strong>SPRING_FRICTION</strong>: 弹簧摩擦力，控制衰减
+</li>
+<li><strong>WAVE_SPREAD</strong>: 波纹传播系数，控制波纹扩散
+</li>
+</ul>
+</ul></p><p><h3>鱼类行为</h3></p><p><ul>
+<li><strong>GRAVITY</strong>: 重力常数
+</li>
+<li>随机生成游动方向和速度
+</li>
+<li>根据水面位置调整垂直运动
+</li>
+<li>鱼尾和鱼鳍有摆动动画
+</li>
+<li>与水面交互产生波纹
+</li>
+</ul></p><p><h2>特性</h2></p><p><ul>
+<li>🐟 简洁优雅的鱼游动动画
+</li>
+<li>🌊 基于弹簧物理的水面波纹模拟
+</li>
+<li>🎨 使用贝塞尔曲线绘制鱼的形状
+</li>
+<li>🔄 鱼尾和鱼鳍的摆动动画
+</li>
+<li>💧 鱼与水面交互产生波纹效果
+</li>
+<li>📱 响应式设计，自适应容器大小
+</li>
+</ul></p><p><h2>具体效果</h2></p><p>见博客列表页底部</p>
+  </article>
+</body>
+</html>

@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "A minimal personal blog",
   "scripts": {
-    "build": "node build-posts.js"
+    "build": "node build-posts.js",
+    "dev": "npx http-server -p 8080 -o"
   },
   "dependencies": {
     "gray-matter": "^4.0.3"
