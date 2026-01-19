@@ -225,7 +225,7 @@ const Router = {
             <h1 class="blog-detail-title">${blog.title}</h1>
             <p class="blog-detail-date">${fullDate}</p>
             <div class="prose">${contentHtml}</div>
-            <a href="#blog" class="back-link" data-tooltip="返回列表">返回列表</a>
+            <a href="#blog" class="back-link">返回列表</a>
           </article>
         </div>
       </div>
@@ -331,7 +331,7 @@ const Router = {
             <p>I code in C++, Golang, and Python. Beyond programming, I enjoy music, running, and reading.</p>
             <p>This blog is where I share my technical journey and thoughts.</p>
           </div>
-          <a href="#home" class="back-link" data-tooltip="Back to Home">Back to Home</a>
+          <a href="#home" class="back-link">Back to Home</a>
         </article>
       </div>
     `;
