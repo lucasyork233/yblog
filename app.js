@@ -138,7 +138,7 @@ const Router = {
         </div>
         ${blogItems || '<p style="text-align: center; color: var(--text-secondary);">暂无文章</p>'}
       </div>
-      <div id="j-fish-skip" style="position: relative; height: 153px; width: 100%; margin-top: auto;"></div>
+      <div id="j-fish-skip" style="position: fixed; bottom: 0; left: 0; right: 0; height: 153px; width: 100%;"></div>
     `;
 
     // 初始化鱼动画
@@ -181,9 +181,30 @@ const Router = {
       return;
     }
 
+    // 动态加载文章内容
+    const scriptId = `post-script-${slug}`;
+    if (!document.getElementById(scriptId)) {
+      const script = document.createElement('script');
+      script.id = scriptId;
+      script.src = `posts/${slug}.js`;
+      script.onload = () => this.renderBlogContent(blog, slug);
+      script.onerror = () => this.renderNotFound();
+      document.head.appendChild(script);
+    } else {
+      this.renderBlogContent(blog, slug);
+    }
+  },
+
+  renderBlogContent(blog, slug) {
+    const postData = window[slug.replace(/-/g, '')];
+    if (!postData) {
+      this.renderNotFound();
+      return;
+    }
+
     const app = document.getElementById('app');
     const fullDate = formatDate(blog.date, 'full');
-    const contentHtml = parseMarkdown(blog.content);
+    const contentHtml = parseMarkdown(postData.content);
 
         // 先在body创建TOC
         const tocElement = document.createElement('aside');
@@ -218,8 +239,13 @@ const Router = {
       if (e.key === 'Escape') this.navigate('#blog');
     });
 
-    // 代码复制功能
+    // 代码复制功能 + 语法高亮
     setTimeout(() => {
+      // 触发 Prism 高亮
+      if (typeof Prism !== 'undefined') {
+        Prism.highlightAll();
+      }
+      
       const codeBlocks = app.querySelectorAll('pre code');
       codeBlocks.forEach(block => {
         const pre = block.parentElement;

@@ -1,0 +1,11 @@
+{
+  "name": "yblog",
+  "version": "1.0.0",
+  "description": "A minimal personal blog",
+  "scripts": {
+    "build": "node build-posts.js"
+  },
+  "dependencies": {
+    "gray-matter": "^4.0.3"
+  }
+}

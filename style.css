@@ -998,6 +998,21 @@ body {
   margin-right: 0.2em;
 }
 
+/* Todo list 样式 */
+.prose li input[type="checkbox"] {
+  margin-right: 0.5em;
+  cursor: default;
+}
+
+.prose li:has(input[type="checkbox"])::before {
+  content: none; /* 移除 todo list 前面的点 */
+}
+
+.prose li:has(input[type="checkbox"]) {
+  padding-left: 0; /* 移除 todo list 的左边距 */
+  list-style: none;
+}
+
 /* 分割线 - 简化版本 */
 .prose hr {
   border: none;
