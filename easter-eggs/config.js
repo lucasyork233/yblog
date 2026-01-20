@@ -3,6 +3,13 @@
 
 const EASTER_EGGS = [
   {
+    id: 'calendar',
+    name: '日历',
+    description: 'Monthly Calendar',
+    file: 'calendar.js',
+    icon: '📅'
+  },
+  {
     id: 'clock',
     name: '番茄时钟',
     description: 'Pomodoro Timer',

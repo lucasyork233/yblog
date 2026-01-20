@@ -1,4 +1,4 @@
-/* 彩蛋页面样式 - 番茄钟、事件列表 */
+/* 彩蛋页面样式 - 番茄钟、事件列表、日历 */
 
 /* ========== 番茄时钟 ========== */
 .clock-page {
@@ -443,4 +443,83 @@
 .cancel-btn:hover {
   background-color: var(--bg-subtle);
   border-color: var(--border-medium);
+}
+
+/* ========== 日历页面 ========== */
+.calendar-page {
+  background: linear-gradient(135deg, #fff5f5 0%, #ffffff 100%);
+  padding: 2rem 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.calendar-container {
+  max-width: 500px;
+  width: 100%;
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  padding: 2rem;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border-light);
+}
+
+.calendar-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #ff6b6b;
+}
+
+.calendar-title {
+  font-size: 1.8rem;
+  color: #ff6b6b;
+  margin: 0;
+  font-weight: 600;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.5rem;
+}
+
+.calendar-weekday {
+  text-align: center;
+  padding: 0.8rem 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #ff6b6b;
+  border-bottom: 1px solid #ffe0e0;
+}
+
+.calendar-day {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  color: var(--text-primary);
+  border-radius: var(--radius-sm);
+  transition: all 0.2s;
+  cursor: default;
+}
+
+.calendar-day:hover:not(.calendar-day-empty):not(.calendar-day-today) {
+  background-color: #fff5f5;
+  transform: scale(1.05);
+}
+
+.calendar-day-empty {
+  visibility: hidden;
+}
+
+.calendar-day-today {
+  background: #ff6b6b;
+  color: white;
+  font-weight: bold;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+  transform: scale(1.1);
 }

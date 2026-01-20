@@ -93,7 +93,7 @@ const EasterEggManager = {
     return `${pascalCase}EasterEgg`;
   },
 
-  // 获取所有彩蛋列表（用于生成提示信息）
+  // 获取所有彩蛋列表
   getAllEggs() {
     return this.eggs.map(egg => ({
       id: egg.id,
@@ -101,25 +101,6 @@ const EasterEggManager = {
       description: egg.description,
       icon: egg.icon
     }));
-  },
-
-  // 生成彩蛋提示 HTML（用于 HTML 注释）
-  generateHintHTML() {
-    if (this.eggs.length === 0) return '';
-    
-    const hints = this.eggs.map(egg => 
-      `    ║  ${egg.icon} #${egg.id.padEnd(8)} - ${egg.description.padEnd(30)} ║`
-    ).join('\n');
-
-    return `
-    ╔══════════════════════════════════════════════════════════════╗
-    ║  🎉 Congrats! You found the secret easter egg! 🎉           ║
-    ║                                                              ║
-    ║  Hidden pages:                                               ║
-${hints}
-    ║                                                              ║
-    ║  Stay focused, stay organized.                               ║
-    ╚══════════════════════════════════════════════════════════════╝`;
   }
 };
 
