@@ -17,6 +17,13 @@ const EASTER_EGGS = [
     icon: '🍅'
   },
   {
+    id: 'countdown',
+    name: '倒计时',
+    description: 'Countdown Timer',
+    file: 'countdown.js',
+    icon: '⏱️'
+  },
+  {
     id: 'events',
     name: '每日事件',
     description: 'Daily Event List',
