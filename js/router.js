@@ -84,10 +84,11 @@ const Router = {
     if (hour >= 12 && hour < 18) greeting = 'Good Afternoon';
     else if (hour >= 18) greeting = 'Good Evening';
 
+    // <img src="assets/avatar.jpg" alt="Avatar" class="avatar">
     app.innerHTML = `
       <div class="page home-page">
         <div class="home-card">
-          <img src="assets/avatar.jpg" alt="Avatar" class="avatar">
+          <img src="https://user1481.cn.imgto.link/blog_lucky/20260206/head-02.avif" alt="Avatar" class="avatar">
           <div class="greeting">${greeting}.</div>
           <div class="intro">I'm <a href="#about" class="name">LucasYork</a>.</div>
           <div class="nice-to-meet">Nice to meet you!</div>
@@ -319,11 +320,12 @@ const Router = {
   renderAbout() {
     const app = document.getElementById('app');
 
+    // <img src="assets/avatar.jpg" alt="Avatar" class="avatar">
     app.innerHTML = `
       <div class="container about-page">
         <article class="card">
           <div class="about-header">
-            <img src="assets/avatar.jpg" alt="LucasYork" class="about-avatar">
+            <img src="https://user1481.cn.imgto.link/blog_lucky/20260206/head-02.avif" alt="LucasYork" class="about-avatar">
             <h1 class="about-title">About Me</h1>
           </div>
           <div class="about-content">
