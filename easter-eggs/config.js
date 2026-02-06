@@ -3,6 +3,13 @@
 
 const EASTER_EGGS = [
   {
+    id: 'calc',
+    name: '计算器',
+    description: 'BMI 体脂 配速计算',
+    file: 'calc.js',
+    icon: '🧮'
+  },
+  {
     id: 'calendar',
     name: '日历',
     description: 'Monthly Calendar',
