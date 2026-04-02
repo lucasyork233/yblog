@@ -232,6 +232,69 @@
   color: var(--accent);
 }
 
+/* 搜索框 */
+.blog-search-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto 1.5rem;
+}
+
+.blog-search-input {
+  width: 100%;
+  padding: 0.75rem 2.5rem 0.75rem 1rem;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: all var(--transition-base);
+  outline: none;
+  font-family: inherit;
+}
+
+.blog-search-input::placeholder {
+  color: var(--text-tertiary);
+}
+
+.blog-search-input:focus {
+  border-color: var(--accent-light);
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.blog-search-clear {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  border-radius: 50%;
+  transition: all var(--transition-base);
+  padding: 0;
+}
+
+.blog-search-clear:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--accent);
+}
+
+.blog-no-results {
+  text-align: center;
+  color: var(--text-secondary);
+  padding: var(--space-xl);
+  font-size: 0.95rem;
+}
+
 /* 博客条目 */
 .blog-item {
   display: flex;

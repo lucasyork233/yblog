@@ -113,7 +113,7 @@ const Router = {
     });
   },
 
-  renderBlogList() {
+  renderBlogList(searchQuery = '') {
     const app = document.getElementById('app');
     
     // 销毁之前的鱼动画
@@ -121,7 +121,11 @@ const Router = {
       FISH_RENDERER.destroy();
     }
     
-    const blogItems = blogs.map((blog, index) => {
+    const filteredBlogs = searchQuery
+      ? blogs.filter(blog => blog.title.toLowerCase().includes(searchQuery.toLowerCase()))
+      : blogs;
+    
+    const blogItems = filteredBlogs.map((blog, index) => {
       const date = formatDate(blog.date);
       const tags = blog.tags.map(tag => `<span class="tag">#${tag}</span>`).join('');
       return `
@@ -133,22 +137,54 @@ const Router = {
       `;
     }).join('');
 
+    const searchValue = searchQuery.replace(/"/g, '&quot;');
+    const hasResults = blogItems || '';
+    const showFish = !searchQuery;
+
     app.innerHTML = `
       <div class="container blog-list">
         <div class="blog-list-header">
           <h1 class="blog-list-title" style="cursor: pointer;" onclick="window.location.hash='#home'">博客</h1>
         </div>
-        ${blogItems || '<p style="text-align: center; color: var(--text-secondary);">暂无文章</p>'}
+        <div class="blog-search-wrapper">
+          <input type="text" class="blog-search-input" placeholder="Search articles..." value="${searchValue}" autocomplete="off" />
+          <button class="blog-search-clear" type="button" style="${searchQuery ? '' : 'display: none;'}">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </div>
+        ${hasResults || '<p class="blog-no-results">No articles found</p>'}
       </div>
-      <div id="j-fish-skip" style="position: relative; height: 153px; width: 100%; margin-top: auto;"></div>
+      ${showFish ? '<div id="j-fish-skip" style="position: relative; height: 153px; width: 100%; margin-top: auto;"></div>' : ''}
     `;
 
-    // 初始化鱼动画
-    setTimeout(() => {
-      if (typeof FISH_RENDERER !== 'undefined') {
-        FISH_RENDERER.init();
+    // 搜索功能 - 回车触发
+    const searchInput = app.querySelector('.blog-search-input');
+    const clearBtn = app.querySelector('.blog-search-clear');
+
+    searchInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        const query = searchInput.value.trim();
+        this.renderBlogList(query);
       }
-    }, 100);
+    });
+
+    clearBtn.addEventListener('click', () => {
+      this.renderBlogList('');
+      const newInput = app.querySelector('.blog-search-input');
+      if (newInput) newInput.focus();
+    });
+
+    // 初始化鱼动画
+    if (showFish) {
+      setTimeout(() => {
+        if (typeof FISH_RENDERER !== 'undefined') {
+          FISH_RENDERER.init();
+        }
+      }, 100);
+    }
 
     document.querySelectorAll('.blog-item').forEach((item, index) => {
       item.addEventListener('click', (e) => {
