@@ -964,3 +964,196 @@
     gap: 0.5rem;
   }
 }
+
+/* ========== 健身计时页面 ========== */
+.fit-page {
+  background: linear-gradient(135deg, #fef2f2 0%, #ffffff 100%);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem 1rem;
+}
+
+.fit-container {
+  width: 100%;
+  max-width: 420px;
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  padding: 3rem 2rem 2.5rem;
+  box-shadow: var(--shadow-lg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-light);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  position: relative;
+}
+
+.fit-settings-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: transparent;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-base);
+}
+
+.fit-settings-btn:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--accent);
+  transform: rotate(90deg);
+}
+
+.fit-phase-label {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  transition: color var(--transition-base);
+}
+
+.fit-phase-prepare { color: #d4a843; }
+.fit-phase-work { color: #22c55e; }
+.fit-phase-rest { color: #f97316; }
+.fit-phase-done { color: var(--accent); }
+
+.fit-timer-display {
+  font-size: 4.5rem;
+  font-weight: 700;
+  color: var(--text-tertiary);
+  font-family: 'Courier New', monospace;
+  letter-spacing: 2px;
+  transition: color var(--transition-base);
+  line-height: 1;
+}
+
+.fit-timer-prepare { color: #d4a843; }
+.fit-timer-work { color: #22c55e; }
+.fit-timer-rest { color: #f97316; }
+.fit-timer-done { color: var(--accent); }
+
+.fit-blink {
+  animation: fitBlink 0.5s ease-in-out 3;
+}
+
+@keyframes fitBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
+}
+
+.fit-round-indicator {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.fit-progress-bar {
+  width: 100%;
+  height: 6px;
+  background: rgba(0, 0, 0, 0.06);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.fit-progress-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: 3px;
+  transition: width 0.3s ease, background var(--transition-base);
+  background: var(--text-tertiary);
+}
+
+.fit-progress-prepare { background: #d4a843; }
+.fit-progress-work { background: #22c55e; }
+.fit-progress-rest { background: #f97316; }
+.fit-progress-done { background: var(--accent); }
+
+.fit-buttons {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.fit-btn {
+  padding: 0.7rem 2rem;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  letter-spacing: 1px;
+  text-transform: lowercase;
+}
+
+.fit-btn-start {
+  background: linear-gradient(135deg, var(--accent) 0%, #dc2626 100%);
+  color: white;
+}
+
+.fit-btn-start:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+}
+
+.fit-btn-reset {
+  background: rgba(0, 0, 0, 0.06);
+  color: var(--text-secondary);
+}
+
+.fit-btn-reset:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.fit-btn-save {
+  background: linear-gradient(135deg, var(--accent) 0%, #dc2626 100%);
+  color: white;
+  padding: 0.65rem 1.5rem;
+}
+
+.fit-btn-save:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(239, 68, 68, 0.3);
+}
+
+.fit-modal {
+  width: 90%;
+  max-width: 360px;
+}
+
+.fit-modal .form-group input {
+  width: 100%;
+  padding: 0.65rem 0.85rem;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  font-size: 0.95rem;
+  transition: all var(--transition-base);
+}
+
+.fit-modal .form-group input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+@media (max-width: 480px) {
+  .fit-container {
+    padding: 2.5rem 1.5rem 2rem;
+  }
+
+  .fit-timer-display {
+    font-size: 3.5rem;
+  }
+}

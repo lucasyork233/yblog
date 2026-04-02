@@ -37,6 +37,13 @@ const EASTER_EGGS = [
     file: 'events.js',
     icon: '📝'
   },
+  {
+    id: 'fit',
+    name: '健身计时',
+    description: 'Fitness Timer',
+    file: 'fit.js',
+    icon: '💪'
+  },
 
   // 示例彩蛋（取消注释以启用）
   // {
