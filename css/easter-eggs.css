@@ -992,12 +992,33 @@
   position: relative;
 }
 
-.fit-settings-btn {
+.fit-top-bar {
   position: absolute;
   top: 1rem;
+  left: 1rem;
   right: 1rem;
-  width: 36px;
-  height: 36px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.fit-back-link {
+  font-size: 0.85rem;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  text-transform: lowercase;
+  letter-spacing: 1px;
+  transition: color var(--transition-base);
+  user-select: none;
+}
+
+.fit-back-link:hover {
+  color: var(--accent);
+}
+
+.fit-settings-btn {
+  width: 32px;
+  height: 32px;
   border: none;
   background: transparent;
   color: var(--text-tertiary);
@@ -1007,6 +1028,7 @@
   align-items: center;
   justify-content: center;
   transition: all var(--transition-base);
+  padding: 0;
 }
 
 .fit-settings-btn:hover {

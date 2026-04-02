@@ -11,12 +11,15 @@ const FitEasterEgg = {
     app.innerHTML = `
       <div class="page fit-page">
         <div class="fit-container">
-          <button class="fit-settings-btn" id="fitSettingsBtn" title="Settings">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="3"></circle>
-              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-            </svg>
-          </button>
+          <div class="fit-top-bar">
+            <div class="fit-back-link" id="fitBackLink">back</div>
+            <button class="fit-settings-btn" id="fitSettingsBtn" title="Settings">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+              </svg>
+            </button>
+          </div>
           <div class="fit-phase-label" id="fitPhaseLabel">ready</div>
           <div class="fit-timer-display" id="fitTimerDisplay">00:00</div>
           <div class="fit-round-indicator" id="fitRoundIndicator">round 1/${s.rounds}</div>
@@ -37,19 +40,19 @@ const FitEasterEgg = {
           </div>
           <div class="form-group">
             <label>Prepare Time (s)</label>
-            <input type="number" id="fitPrepareTime" value="${s.prepareTime}" min="0" max="60" />
+            <input type="number" id="fitPrepareTime" value="${s.prepareTime}" min="0" max="180" />
           </div>
           <div class="form-group">
             <label>Work Time (s)</label>
-            <input type="number" id="fitWorkTime" value="${s.workTime}" min="1" max="300" />
+            <input type="number" id="fitWorkTime" value="${s.workTime}" min="1" max="180" />
           </div>
           <div class="form-group">
             <label>Rest Time (s)</label>
-            <input type="number" id="fitRestTime" value="${s.restTime}" min="1" max="120" />
+            <input type="number" id="fitRestTime" value="${s.restTime}" min="1" max="180" />
           </div>
           <div class="form-group">
             <label>Rounds</label>
-            <input type="number" id="fitRounds" value="${s.rounds}" min="1" max="20" />
+            <input type="number" id="fitRounds" value="${s.rounds}" min="1" max="10" />
           </div>
           <div class="form-actions">
             <button class="fit-btn fit-btn-save" id="fitSaveSettings">Save</button>
@@ -62,6 +65,11 @@ const FitEasterEgg = {
   },
 
   bindEvents(navigate) {
+    document.getElementById('fitBackLink').addEventListener('click', () => {
+      this.reset();
+      navigate('#home');
+    });
+
     document.getElementById('fitSettingsBtn').addEventListener('click', () => {
       document.getElementById('fitSettingsModal').style.display = 'block';
     });
@@ -77,10 +85,14 @@ const FitEasterEgg = {
     });
 
     document.getElementById('fitSaveSettings').addEventListener('click', () => {
-      this.settings.prepareTime = Math.max(0, parseInt(document.getElementById('fitPrepareTime').value) || 0);
-      this.settings.workTime = Math.max(1, parseInt(document.getElementById('fitWorkTime').value) || 30);
-      this.settings.restTime = Math.max(1, parseInt(document.getElementById('fitRestTime').value) || 10);
-      this.settings.rounds = Math.max(1, parseInt(document.getElementById('fitRounds').value) || 3);
+      this.settings.prepareTime = Math.min(180, Math.max(0, parseInt(document.getElementById('fitPrepareTime').value) || 0));
+      this.settings.workTime = Math.min(180, Math.max(1, parseInt(document.getElementById('fitWorkTime').value) || 30));
+      this.settings.restTime = Math.min(180, Math.max(1, parseInt(document.getElementById('fitRestTime').value) || 10));
+      this.settings.rounds = Math.min(10, Math.max(1, parseInt(document.getElementById('fitRounds').value) || 3));
+      document.getElementById('fitPrepareTime').value = this.settings.prepareTime;
+      document.getElementById('fitWorkTime').value = this.settings.workTime;
+      document.getElementById('fitRestTime').value = this.settings.restTime;
+      document.getElementById('fitRounds').value = this.settings.rounds;
       document.getElementById('fitSettingsModal').style.display = 'none';
       this.reset();
     });
