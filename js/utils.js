@@ -3,6 +3,34 @@
 // 博客数据
 const blogs = [
   {
+    "slug": "post-010",
+    "title": "《六祖坛经》",
+    "date": "2026-05-03T00:00:00.000Z",
+    "summary": "看了个开头",
+    "tags": [
+      "reading"
+    ]
+  },
+  {
+    "slug": "post-009",
+    "title": "The ever-growing C drive",
+    "date": "2026-04-11T00:00:00.000Z",
+    "summary": "治标不治本的办法",
+    "tags": [
+      "Disk C"
+    ]
+  },
+  {
+    "slug": "post-008",
+    "title": "《Free and Easy》一些思考",
+    "date": "2026-01-07T00:00:00.000Z",
+    "summary": "2017年上映的宝藏电影《轻松+愉快》",
+    "tags": [
+      "movie",
+      "thoughts"
+    ]
+  },
+  {
     "slug": "post-007",
     "title": "markdown - image",
     "date": "2026-01-06T00:00:00.000Z",
