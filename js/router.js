@@ -413,7 +413,7 @@ const Router = {
         <div class="card" style="text-align: center; max-width: 400px;">
           <h1 style="font-size: 3rem; margin-bottom: 1rem; color: var(--accent);">404</h1>
           <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">页面未找到</p>
-          <a href="#home" class="back-link" style="margin: 0 auto;">返回首页</a>
+          <a href="/" class="back-link" style="margin: 0 auto;">返回首页</a>
         </div>
       </div>
     `;

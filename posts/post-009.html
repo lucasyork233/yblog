@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The ever-growing C drive</title>
+</head>
+<body>
+  <article data-slug="post-009" data-title="The ever-growing C drive" data-date="Sat Apr 11 2026 08:00:00 GMT+0800 (中国标准时间)" data-summary="治标不治本的办法" data-tags="Disk C">
+    <p><h2>起因</h2></p><p>Dell SupportAssist 弹窗：  </p><p><blockquote>我们无法备份您的系统文件。<br>当您释放一些硬盘空间后，我们将重新自动备份系统文件。</blockquote></p><p><h2>CapabilityAccessManager</h2></p><p><ul>
+<li>通过 WizTree 扫描 C盘发现 <code>C:\ProgramData\Microsoft\Windows\CapabilityAccessManager\CapabilityAccessManager.db-wal</code> 异常巨大，且在持续增大
+</li>
+<li>网上就 CSDN 有一篇可以参考，这篇文章也是最近的
+</li>
+<li>B 站上搜索，也是最近有人发现这个问题
+</li>
+<li>最后问了 DeepSeek，它前面说的许多办法也无效，最后我用了一个“治标不治本”的方法
+</li>
+</ul></p><p><h2>解法</h2></p><p><ol>
+<li>按住 shift 重启电脑
+</li>
+<li>进入蓝屏，依次选择“疑难解答、高级选项、启动设置、重启”
+</li>
+<li>第二次重启后，选 4 进安全模式（不同电脑不同）
+</li>
+<li>不能直接删，管理员身份打开 cmd，依次输入下面命令，然后重启
+</li>
+</ol></p><p><pre><code class="language-txt">net stop camsvc
+del C:\ProgramData\Microsoft\Windows\CapabilityAccessManager\CapabilityAccessManager.db-wal
+net start camsvc</code></pre></p><p><h2>后续</h2></p><p><ul>
+<li>做完上面步骤，CapabilityAccessManager.db-wal 归零，但还是会变大
+</li>
+<li>后来发现还有个方法，禁用“windows search”服务，这个下回再试吧
+</li>
+</ul></p>
+  </article>
+</body>
+</html>
