@@ -3,35 +3,6 @@
 // 博客数据
 const blogs = [
   {
-    "slug": "post-010",
-    "title": "upgrade eggs sys",
-    "date": "2026-01-18T00:00:00.000Z",
-    "summary": "升级彩蛋系统",
-    "tags": [
-      "eggs"
-    ]
-  },
-  {
-    "slug": "post-009",
-    "title": "canvas fish",
-    "date": "2026-01-16T00:00:00.000Z",
-    "summary": "canvas foot fish demo",
-    "tags": [
-      "canvas",
-      "animation"
-    ]
-  },
-  {
-    "slug": "post-008",
-    "title": "《Free and Easy》一些思考",
-    "date": "2026-01-07T00:00:00.000Z",
-    "summary": "2017年上映的宝藏电影《轻松+愉快》",
-    "tags": [
-      "movie",
-      "thoughts"
-    ]
-  },
-  {
     "slug": "post-007",
     "title": "markdown - image",
     "date": "2026-01-06T00:00:00.000Z",

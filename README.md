@@ -1,44 +1,36 @@
-# yBlog
+# Lucky's Blog
 
-极简博客 🌿
+## Quick Start
 
-## 🚀 快速开始
-
-### 1. 使用本地服务器
+### 1. add article
 
 ```
-# 1. Python 3
-python -m http.server 8000
+# posts-md/post-001.md
 
-# 2. 访问
-http://localhost:8000
-```
-
-### 2. 添加新文章
-
-- 在 `posts-md/` 目录下创建新文件，如 `post-001.md`，frontmatter 元数据如下
-
-```
 ---
-slug: post-001（文章唯一标识）
+slug: post-001
 title: 文章标题
 date: 2026-01-01
-summary: 文章摘要（可选）
-tags: [tag1, tag2]（可选）
+summary: 文章摘要
+tags: [tag1, tag2]
 ---
 ```
 
-### 3. 构建命令
+### 2. build
 
-```bash
-npm run build
+```
+# 1. 读取 /posts-md/*.md
+# 2. 生成 /posts/*.js
+# 3. 更新 data.js
+$ npm run build
 ```
 
-1. 读取 `/posts-md/*.md` 文件
-2. 生成 `/posts/*.js` 文件
-3. 更新 `data.js`
+### 3. local view
 
-## 📁 项目结构
+1. `python -m http.server 8000`
+2. `http://localhost:8000`
+
+## Item Structure
 
 ```
 yblog/
@@ -50,19 +42,16 @@ yblog/
 │   ├── components.css     # 组件样式
 │   ├── pages.css          # 页面样式
 │   ├── prose.css          # 文章样式
-│   ├── easter-eggs.css    # 彩蛋样式
 │   └── responsive.css     # 响应式
 ├── js/
 │   ├── utils.js           # 工具函数
-│   ├── fish-animation.js  # 动画逻辑
-│   └── router.js          # 路由系统
-├── easter-eggs/
-│   ├── config.js          # 配置文件（注册彩蛋）
-│   ├── manager.js         # 管理器（自动加载）
-│   ├── egg1.js
-│   └── egg2.js
-├── posts/                 # 解析后的文章 .html
-└── posts-md/              # 博客目录
+│   ├── fish-animation.js  # egg~
+│   └── router.js
+├── eggs/
+│   ├── egg1.html
+│   └── egg2.html
+├── posts/                 # .md -> .html
+└── posts-md/              # markdown
     ├── post-001.md
     └── post-002.md
 ```

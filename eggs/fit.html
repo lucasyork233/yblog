@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fit</title>
+  <link rel="icon" type="image/png" href="/assets/favicon.png">
+  <style>
+    /* 基础样式 */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      /* 主色调 - 温暖的红色 */
+      --primary: #1f2937;
+      --accent: #ef4444;
+      --accent-light: #f87171;
+      --accent-dark: #dc2626;
+      
+      /* 色彩系统 */
+      --text-primary: #1f2937;
+      --text-secondary: #6b7280;
+      --text-tertiary: #9ca3af;
+      
+      /* 背景系统 */
+      --bg-main: #f9fafb;
+      --bg-subtle: #f3f4f6;
+      --bg-card: rgba(255, 255, 255, 0.85);
+      
+      /* 边框系统 */
+      --border-light: #e5e7eb;
+      --border-medium: #d1d5db;
+      
+      /* 阴影系统 */
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      
+      /* 圆角系统 */
+      --radius-sm: 8px;
+      --radius-md: 16px;
+      --radius-lg: 40px;
+      
+      /* 间距系统 */
+      --space-xs: 0.5rem;
+      --space-sm: 0.75rem;
+      --space-md: 1rem;
+      --space-lg: 1.5rem;
+      --space-xl: 2rem;
+      --space-2xl: 3rem;
+      
+      /* 过渡动画 */
+      --transition-fast: 0.15s ease;
+      --transition-base: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-slow: 0.5s ease;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: linear-gradient(135deg, var(--bg-main) 0%, #ffffff 100%);
+      background-attachment: fixed;
+      color: var(--text-primary);
+      line-height: 1.618;
+      min-height: 100vh;
+      overflow-x: hidden;
+      padding: 1rem;
+    }
+
+    /* 健身计时页面样式 */
+    .fit-page {
+      background: linear-gradient(135deg, #fef2f2 0%, #ffffff 100%);
+      min-height: calc(100vh - 2rem);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .fit-container {
+      width: 100%;
+      max-width: 420px;
+      background: var(--bg-card);
+      border-radius: var(--radius-md);
+      padding: 3rem 2rem 2.5rem;
+      box-shadow: var(--shadow-lg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--border-light);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.25rem;
+      position: relative;
+    }
+
+    .fit-top-bar {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      right: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .fit-back-link {
+      font-size: 0.85rem;
+      color: var(--text-tertiary);
+      cursor: pointer;
+      text-transform: lowercase;
+      letter-spacing: 1px;
+      transition: color var(--transition-base);
+      user-select: none;
+    }
+
+    .fit-back-link:hover {
+      color: var(--accent);
+    }
+
+    .fit-settings-btn {
+      width: 32px;
+      height: 32px;
+      border: none;
+      background: transparent;
+      color: var(--text-tertiary);
+      cursor: pointer;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all var(--transition-base);
+      padding: 0;
+    }
+
+    .fit-settings-btn:hover {
+      background: rgba(239, 68, 68, 0.1);
+      color: var(--accent);
+      transform: rotate(90deg);
+    }
+
+    .fit-phase-label {
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      transition: color var(--transition-base);
+    }
+
+    .fit-phase-prepare { color: #d4a843; }
+    .fit-phase-work { color: #22c55e; }
+    .fit-phase-rest { color: #f97316; }
+    .fit-phase-done { color: var(--accent); }
+
+    .fit-timer-display {
+      font-size: 4.5rem;
+      font-weight: 700;
+      color: var(--text-tertiary);
+      font-family: 'Courier New', monospace;
+      letter-spacing: 2px;
+      transition: color var(--transition-base);
+      line-height: 1;
+    }
+
+    .fit-timer-prepare { color: #d4a843; }
+    .fit-timer-work { color: #22c55e; }
+    .fit-timer-rest { color: #f97316; }
+    .fit-timer-done { color: var(--accent); }
+
+    .fit-blink {
+      animation: fitBlink 0.5s ease-in-out 3;
+    }
+
+    @keyframes fitBlink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.2; }
+    }
+
+    .fit-round-indicator {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .fit-progress-bar {
+      width: 100%;
+      height: 6px;
+      background: rgba(0, 0, 0, 0.06);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .fit-progress-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 3px;
+      transition: width 0.3s ease, background var(--transition-base);
+      background: var(--text-tertiary);
+    }
+
+    .fit-progress-prepare { background: #d4a843; }
+    .fit-progress-work { background: #22c55e; }
+    .fit-progress-rest { background: #f97316; }
+    .fit-progress-done { background: var(--accent); }
+
+    .fit-buttons {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 0.5rem;
+    }
+
+    .fit-btn {
+      padding: 0.7rem 2rem;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--transition-base);
+      letter-spacing: 1px;
+      text-transform: lowercase;
+    }
+
+    .fit-btn-start {
+      background: linear-gradient(135deg, var(--accent) 0%, #dc2626 100%);
+      color: white;
+    }
+
+    .fit-btn-start:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+    }
+
+    .fit-btn-reset {
+      background: rgba(0, 0, 0, 0.06);
+      color: var(--text-secondary);
+    }
+
+    .fit-btn-reset:hover {
+      background: rgba(0, 0, 0, 0.1);
+    }
+
+    .fit-btn-save {
+      background: linear-gradient(135deg, var(--accent) 0%, #dc2626 100%);
+      color: white;
+      padding: 0.65rem 1.5rem;
+    }
+
+    .fit-btn-save:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 3px 10px rgba(239, 68, 68, 0.3);
+    }
+
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      animation: fadeIn 0.3s;
+    }
+
+    .modal-content {
+      background-color: white;
+      margin: 10% auto;
+      padding: 0;
+      border-radius: var(--radius-sm);
+      width: 90%;
+      max-width: 500px;
+      box-shadow: var(--shadow-lg);
+      animation: slideIn 0.3s;
+    }
+
+    .fit-modal {
+      max-width: 360px;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 20px;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .modal-header h2 {
+      margin: 0;
+      color: var(--text-primary);
+    }
+
+    .close {
+      color: var(--text-tertiary);
+      font-size: 24px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .close:hover {
+      color: var(--text-primary);
+    }
+
+    .form-group {
+      margin-bottom: 10px;
+      padding: 0 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-top: 8px;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 10px 15px;
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-sm);
+      font-size: 1rem;
+      transition: all var(--transition-base);
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+    }
+
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin: 10px 20px 10px 20px;
+      padding-top: 15px;
+      padding-bottom: 15px;
+      border-top: 1px solid var(--border-light);
+    }
+
+    .submit-btn {
+      background-color: #3498db;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background-color 0.3s;
+    }
+
+    .submit-btn:hover {
+      background-color: #2980b9;
+    }
+
+    .cancel-btn {
+      background-color: transparent;
+      color: var(--text-secondary);
+      border: 1px solid var(--border-light);
+      padding: 10px 20px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 1rem;
+      transition: all 0.3s;
+    }
+
+    .cancel-btn:hover {
+      background-color: var(--bg-subtle);
+      border-color: var(--border-medium);
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    /* 响应式设计 */
+    @media (max-width: 480px) {
+      body {
+        padding: 0.5rem;
+      }
+
+      .fit-page {
+        min-height: calc(100vh - 1rem);
+      }
+
+      .fit-container {
+        padding: 2.5rem 1.5rem 2rem;
+      }
+
+      .fit-timer-display {
+        font-size: 3.5rem;
+      }
+    }
+
+    /* 动画 */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateY(-20px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .fit-container {
+      animation: fadeIn 0.6s ease;
+    }
+  </style>
+</head>
+<body>
+  <div class="fit-page">
+    <div class="fit-container">
+      <div class="fit-top-bar">
+        <div class="fit-back-link" id="fitBackLink" onclick="window.location.href = '/'">back</div>
+        <button class="fit-settings-btn" id="fitSettingsBtn" title="Settings">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          </svg>
+        </button>
+      </div>
+      <div class="fit-phase-label" id="fitPhaseLabel">ready</div>
+      <div class="fit-timer-display" id="fitTimerDisplay">00:00</div>
+      <div class="fit-round-indicator" id="fitRoundIndicator">round 1/3</div>
+      <div class="fit-progress-bar">
+        <div class="fit-progress-fill" id="fitProgressFill"></div>
+      </div>
+      <div class="fit-buttons">
+        <button class="fit-btn fit-btn-start" id="fitStartBtn">start</button>
+        <button class="fit-btn fit-btn-reset hidden" id="fitResetBtn">reset</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="fitSettingsModal">
+    <div class="modal-content fit-modal">
+      <div class="modal-header">
+        <h2>Settings</h2>
+        <span class="close" id="fitModalClose">&times;</span>
+      </div>
+      <div class="form-group">
+        <label>Prepare Time (s)</label>
+        <input type="number" id="fitPrepareTime" value="10" min="0" max="180" />
+      </div>
+      <div class="form-group">
+        <label>Work Time (s)</label>
+        <input type="number" id="fitWorkTime" value="30" min="1" max="180" />
+      </div>
+      <div class="form-group">
+        <label>Rest Time (s)</label>
+        <input type="number" id="fitRestTime" value="10" min="1" max="180" />
+      </div>
+      <div class="form-group">
+        <label>Rounds</label>
+        <input type="number" id="fitRounds" value="3" min="1" max="10" />
+      </div>
+      <div class="form-actions">
+        <button class="fit-btn fit-btn-save" id="fitSaveSettings">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Fit计时器应用
+    const FitApp = {
+      settings: {
+        prepareTime: 10,
+        workTime: 30,
+        restTime: 10,
+        rounds: 3
+      },
+
+      timer: null,
+      running: false,
+      currentRound: 1,
+      phase: 'idle',
+      timeLeft: 0,
+      phaseTotal: 0,
+
+      init() {
+        this.bindEvents();
+      },
+
+      bindEvents() {
+        document.getElementById('fitSettingsBtn').addEventListener('click', () => {
+          document.getElementById('fitSettingsModal').style.display = 'block';
+        });
+
+        document.getElementById('fitModalClose').addEventListener('click', () => {
+          document.getElementById('fitSettingsModal').style.display = 'none';
+        });
+
+        document.getElementById('fitSettingsModal').addEventListener('click', (e) => {
+          if (e.target.id === 'fitSettingsModal') {
+            e.target.style.display = 'none';
+          }
+        });
+
+        document.getElementById('fitSaveSettings').addEventListener('click', () => {
+          this.settings.prepareTime = Math.min(180, Math.max(0, parseInt(document.getElementById('fitPrepareTime').value) || 0));
+          this.settings.workTime = Math.min(180, Math.max(1, parseInt(document.getElementById('fitWorkTime').value) || 30));
+          this.settings.restTime = Math.min(180, Math.max(1, parseInt(document.getElementById('fitRestTime').value) || 10));
+          this.settings.rounds = Math.min(10, Math.max(1, parseInt(document.getElementById('fitRounds').value) || 3));
+          document.getElementById('fitPrepareTime').value = this.settings.prepareTime;
+          document.getElementById('fitWorkTime').value = this.settings.workTime;
+          document.getElementById('fitRestTime').value = this.settings.restTime;
+          document.getElementById('fitRounds').value = this.settings.rounds;
+          document.getElementById('fitSettingsModal').style.display = 'none';
+          this.reset();
+        });
+
+        document.getElementById('fitStartBtn').addEventListener('click', () => {
+          this.start();
+        });
+
+        document.getElementById('fitResetBtn').addEventListener('click', () => {
+          this.reset();
+        });
+
+        // 页面可见性变化处理
+        document.addEventListener('visibilitychange', () => {
+          if (document.hidden && this.running) {
+            // 页面隐藏时暂停计时器
+            this.pause();
+          } else if (!document.hidden && this.wasRunning) {
+            // 页面重新显示时恢复计时器
+            this.resume();
+          }
+        });
+
+        // 页面卸载前清理
+        window.addEventListener('beforeunload', () => {
+          this.cleanup();
+        });
+
+        // 页面加载时重置状态
+        window.addEventListener('load', () => {
+          this.reset();
+        });
+      },
+
+      start() {
+        if (this.running) return;
+        this.running = true;
+        this.currentRound = 1;
+
+        const s = this.settings;
+        if (s.prepareTime > 0) {
+          this.phase = 'prepare';
+          this.timeLeft = s.prepareTime;
+          this.phaseTotal = s.prepareTime;
+        } else {
+          this.phase = 'work';
+          this.timeLeft = s.workTime;
+          this.phaseTotal = s.workTime;
+        }
+
+        document.getElementById('fitStartBtn').classList.add('hidden');
+        document.getElementById('fitResetBtn').classList.remove('hidden');
+
+        this.tick();
+        this.timer = setInterval(() => this.tick(), 1000);
+      },
+
+      tick() {
+        const s = this.settings;
+        const display = document.getElementById('fitTimerDisplay');
+        const label = document.getElementById('fitPhaseLabel');
+        const round = document.getElementById('fitRoundIndicator');
+        const progress = document.getElementById('fitProgressFill');
+
+        const mins = Math.floor(this.timeLeft / 60).toString().padStart(2, '0');
+        const secs = (this.timeLeft % 60).toString().padStart(2, '0');
+        display.textContent = `${mins}:${secs}`;
+
+        round.textContent = `round ${this.currentRound}/${s.rounds}`;
+
+        const pct = ((this.phaseTotal - this.timeLeft) / this.phaseTotal) * 100;
+        progress.style.width = `${pct}%`;
+
+        if (this.timeLeft <= 3 && this.timeLeft > 0) {
+          display.classList.add('fit-blink');
+        } else {
+          display.classList.remove('fit-blink');
+        }
+
+        switch (this.phase) {
+          case 'prepare':
+            label.textContent = 'get ready';
+            label.className = 'fit-phase-label fit-phase-prepare';
+            display.className = 'fit-timer-display fit-timer-prepare';
+            progress.className = 'fit-progress-fill fit-progress-prepare';
+            break;
+          case 'work':
+            label.textContent = 'work';
+            label.className = 'fit-phase-label fit-phase-work';
+            display.className = 'fit-timer-display fit-timer-work';
+            progress.className = 'fit-progress-fill fit-progress-work';
+            break;
+          case 'rest':
+            label.textContent = 'rest';
+            label.className = 'fit-phase-label fit-phase-rest';
+            display.className = 'fit-timer-display fit-timer-rest';
+            progress.className = 'fit-progress-fill fit-progress-rest';
+            break;
+        }
+
+        this.timeLeft--;
+
+        if (this.timeLeft < 0) {
+          this.nextPhase();
+        }
+      },
+
+      nextPhase() {
+        const s = this.settings;
+
+        if (this.phase === 'prepare') {
+          this.phase = 'work';
+          this.timeLeft = s.workTime;
+          this.phaseTotal = s.workTime;
+        } else if (this.phase === 'work') {
+          if (this.currentRound >= s.rounds) {
+            this.finish();
+            return;
+          }
+          this.phase = 'rest';
+          this.timeLeft = s.restTime;
+          this.phaseTotal = s.restTime;
+        } else if (this.phase === 'rest') {
+          this.currentRound++;
+          this.phase = 'work';
+          this.timeLeft = s.workTime;
+          this.phaseTotal = s.workTime;
+        }
+
+        document.getElementById('fitTimerDisplay').classList.remove('fit-blink');
+        this.tick();
+      },
+
+      finish() {
+        this.cleanup();
+        this.running = false;
+
+        const display = document.getElementById('fitTimerDisplay');
+        const label = document.getElementById('fitPhaseLabel');
+        const progress = document.getElementById('fitProgressFill');
+
+        display.textContent = '00:00';
+        display.className = 'fit-timer-display fit-timer-done';
+        display.classList.remove('fit-blink');
+        label.textContent = 'done!';
+        label.className = 'fit-phase-label fit-phase-done';
+        progress.style.width = '100%';
+        progress.className = 'fit-progress-fill fit-progress-done';
+
+        document.getElementById('fitStartBtn').classList.remove('hidden');
+        document.getElementById('fitStartBtn').textContent = 'restart';
+        document.getElementById('fitResetBtn').classList.add('hidden');
+      },
+
+      reset() {
+        this.cleanup();
+        this.running = false;
+        this.currentRound = 1;
+        this.phase = 'idle';
+        this.timeLeft = 0;
+
+        const display = document.getElementById('fitTimerDisplay');
+        const label = document.getElementById('fitPhaseLabel');
+        const round = document.getElementById('fitRoundIndicator');
+        const progress = document.getElementById('fitProgressFill');
+
+        display.textContent = '00:00';
+        display.className = 'fit-timer-display';
+        label.textContent = 'ready';
+        label.className = 'fit-phase-label';
+        round.textContent = `round 1/${this.settings.rounds}`;
+        progress.style.width = '0%';
+        progress.className = 'fit-progress-fill';
+
+        document.getElementById('fitStartBtn').classList.remove('hidden');
+        document.getElementById('fitStartBtn').textContent = 'start';
+        document.getElementById('fitResetBtn').classList.add('hidden');
+      },
+
+      pause() {
+        if (this.timer) {
+          clearInterval(this.timer);
+          this.timer = null;
+          this.wasRunning = this.running;
+          this.running = false;
+        }
+      },
+
+      resume() {
+        if (this.wasRunning && !this.running) {
+          this.running = true;
+          this.timer = setInterval(() => this.tick(), 1000);
+          this.wasRunning = false;
+        }
+      },
+
+      cleanup() {
+        if (this.timer) {
+          clearInterval(this.timer);
+          this.timer = null;
+        }
+        this.wasRunning = false;
+      }
+    };
+
+    // 初始化应用
+    document.addEventListener('DOMContentLoaded', () => {
+      FitApp.init();
+    });
+  </script>
+</body>
+</html>

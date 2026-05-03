@@ -53,25 +53,12 @@ const Router = {
       return;
     }
 
-    // 检查是否是彩蛋路由
-    const eggMatch = hash.match(/^#(.+)$/);
-    if (eggMatch) {
-      const eggId = eggMatch[1];
-      
-      // 先检查是否是博客详情页
-      if (eggId.startsWith('blog/')) {
-        const slug = eggId.substring(5);
-        this.renderBlogDetail(slug);
-        return;
-      }
-      
-      // 尝试渲染彩蛋
-      if (typeof EasterEggManager !== 'undefined' && EasterEggManager.loaded) {
-        if (EasterEggManager.hasEgg(eggId)) {
-          EasterEggManager.renderEgg(eggId, app, this.navigate.bind(this));
-          return;
-        }
-      }
+    // 检查是否是博客详情页
+    const blogMatch = hash.match(/^#blog\/(.+)$/);
+    if (blogMatch) {
+      const slug = blogMatch[1];
+      this.renderBlogDetail(slug);
+      return;
     }
 
     this.renderHome();
@@ -84,26 +71,110 @@ const Router = {
     if (hour >= 12 && hour < 18) greeting = 'Good Afternoon';
     else if (hour >= 18) greeting = 'Good Evening';
 
-    // <img src="assets/avatar.jpg" alt="Avatar" class="avatar">
-    // <img src="https://user1481.cn.imgto.link/blog_lucky/20260206/head-02.avif" alt="Avatar" class="avatar">
     app.innerHTML = `
       <div class="page home-page">
         <div class="home-card">
-          <img src="assets/avatar.jpg" alt="Avatar" class="avatar">
-          <div class="greeting">${greeting}.</div>
-          <div class="intro">I'm <a href="#about" class="name">LucasYork</a>.</div>
-          <div class="nice-to-meet">Nice to meet you!</div>
+          <div class="countdown-overlay">
+            <div class="countdown-items">
+              <div class="countdown-item">
+                <div class="countdown-item-text" id="todayText"></div>
+                <div class="countdown-bar">
+                  <div class="countdown-progress countdown-progress-today" id="todayProgress"></div>
+                </div>
+              </div>
+              <div class="countdown-item">
+                <div class="countdown-item-text" id="weekText"></div>
+                <div class="countdown-bar">
+                  <div class="countdown-progress countdown-progress-week" id="weekProgress"></div>
+                </div>
+              </div>
+              <div class="countdown-item">
+                <div class="countdown-item-text" id="monthText"></div>
+                <div class="countdown-bar">
+                  <div class="countdown-progress countdown-progress-month" id="monthProgress"></div>
+                </div>
+              </div>
+              <div class="countdown-item">
+                <div class="countdown-item-text" id="yearText"></div>
+                <div class="countdown-bar">
+                  <div class="countdown-progress countdown-progress-year" id="yearProgress"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-content">
+            <img src="assets/avatar.jpg" alt="Avatar" class="avatar">
+            <div class="greeting">${greeting}.</div>
+            <div class="intro">I'm <a href="#about" class="name">LucasYork</a>.</div>
+            <div class="nice-to-meet">Nice to meet you!</div>
+          </div>
         </div>
       </div>
     `;
 
     const card = app.querySelector('.home-card');
     const nameLink = app.querySelector('.name');
+    const countdownOverlay = app.querySelector('.countdown-overlay');
+    let isCountdownVisible = false;
 
+    // 点击头像显示倒计时
+    const avatar = app.querySelector('.avatar');
+    avatar.addEventListener('click', (e) => {
+      e.stopPropagation();
+      isCountdownVisible = !isCountdownVisible;
+      
+      if (isCountdownVisible) {
+        countdownOverlay.classList.add('visible');
+        // 更新倒计时
+        this.updateCountdown();
+        // 每分钟更新一次
+        if (window.countdownInterval) {
+          clearInterval(window.countdownInterval);
+        }
+        window.countdownInterval = setInterval(() => this.updateCountdown(), 60000);
+      } else {
+        countdownOverlay.classList.remove('visible');
+        // 停止更新
+        if (window.countdownInterval) {
+          clearInterval(window.countdownInterval);
+          window.countdownInterval = null;
+        }
+      }
+    });
+
+    // 点击倒计时恢复原状
+    countdownOverlay.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (isCountdownVisible) {
+        isCountdownVisible = false;
+        countdownOverlay.classList.remove('visible');
+        // 停止更新
+        if (window.countdownInterval) {
+          clearInterval(window.countdownInterval);
+          window.countdownInterval = null;
+        }
+      }
+    });
+
+    // 点击卡片其他部分
     card.addEventListener('click', (e) => {
       if (e.target.closest('.name') === nameLink) return;
-      card.style.transform = 'scale(0.95)';
-      setTimeout(() => this.navigate('#blog'), 100);
+      if (e.target === avatar) return; // 头像点击已处理
+      
+      if (isCountdownVisible) {
+        // 如果倒计时正在显示，点击卡片隐藏倒计时
+        isCountdownVisible = false;
+        countdownOverlay.classList.remove('visible');
+        // 停止更新
+        if (window.countdownInterval) {
+          clearInterval(window.countdownInterval);
+          window.countdownInterval = null;
+        }
+      } else {
+        // 如果倒计时没有显示，点击卡片跳转到博客列表
+        card.style.transform = 'scale(0.95)';
+        setTimeout(() => this.navigate('#blog'), 100);
+      }
     });
 
     document.addEventListener('keydown', (e) => {
@@ -145,10 +216,10 @@ const Router = {
     app.innerHTML = `
       <div class="container blog-list">
         <div class="blog-list-header">
-          <h1 class="blog-list-title" style="cursor: pointer;" onclick="window.location.hash='#home'">博客</h1>
+          <h1 class="blog-list-title" style="cursor: pointer;" onclick="window.location.href='/'">博客</h1>
         </div>
         <div class="blog-search-wrapper">
-          <input type="text" class="blog-search-input" placeholder="Search articles..." value="${searchValue}" autocomplete="off" />
+          <input type="text" class="blog-search-input" placeholder="Search Titles..." value="${searchValue}" autocomplete="off" />
           <button class="blog-search-clear" type="button" style="${searchQuery ? '' : 'display: none;'}">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
               <path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
@@ -350,7 +421,7 @@ const Router = {
     const backLink = app.querySelector('.back-link');
     backLink.addEventListener('click', (e) => {
       e.preventDefault();
-      this.navigate('#home');
+      window.location.href = '/';
     });
   },
 
@@ -371,7 +442,7 @@ const Router = {
             <p>I code in C++, Golang, and Python. Beyond programming, I enjoy music, running, and reading.</p>
             <p>This blog is where I share my technical journey and thoughts.</p>
           </div>
-          <a href="#home" class="back-link">Back to Home</a>
+          <a href="/" class="back-link">Back to Home</a>
         </article>
       </div>
     `;
@@ -380,12 +451,73 @@ const Router = {
     backLink.addEventListener('click', (e) => {
       e.preventDefault();
       backLink.style.transform = 'translateX(-4px)';
-      setTimeout(() => this.navigate('#home'), 100);
+      setTimeout(() => window.location.href = '/', 100);
     });
 
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') this.navigate('#home');
+      if (e.key === 'Escape') window.location.href = '/';
     });
+  },
+
+  // 倒计时更新函数
+  updateCountdown() {
+    const now = new Date();
+
+    // Today progress (hours passed / 24 hours)
+    const hoursPassed = now.getHours() + now.getMinutes() / 60;
+    const hoursInt = Math.floor(hoursPassed);
+    const todayProgress = (hoursPassed / 24) * 100;
+    const hoursUnit = this.pluralize(hoursInt, 'hour');
+
+    // Week progress (current day of week / 7 days)
+    // Sunday = 0, Monday = 1, ..., Saturday = 6
+    // We want Monday = 1, Sunday = 7
+    let dayOfWeek = now.getDay();
+    dayOfWeek = dayOfWeek === 0 ? 7 : dayOfWeek;
+    const weekProgress = (dayOfWeek / 7) * 100;
+    const weekUnit = this.pluralize(dayOfWeek, 'day');
+
+    // Month progress (current day / days in month)
+    const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+    const dayOfMonth = now.getDate();
+    const monthProgress = (dayOfMonth / daysInMonth) * 100;
+    const monthUnit = this.pluralize(dayOfMonth, 'day');
+
+    // Year progress (day of year / 365 or 366)
+    const startOfYear = new Date(now.getFullYear(), 0, 1);
+    const dayOfYear = Math.floor((now - startOfYear) / (1000 * 60 * 60 * 24)) + 1;
+    const daysInYear = new Date(now.getFullYear(), 11, 31).getDate() === 31 ? 365 : 366;
+    const yearProgress = (dayOfYear / daysInYear) * 100;
+    const yearUnit = this.pluralize(dayOfYear, 'day');
+
+    // Update text with colored numbers
+    const todayText = document.getElementById('todayText');
+    const weekText = document.getElementById('weekText');
+    const monthText = document.getElementById('monthText');
+    const yearText = document.getElementById('yearText');
+
+    if (todayText) todayText.innerHTML = `Today has passed <span class="countdown-number">${hoursInt}</span> ${hoursUnit}.`;
+    if (weekText) weekText.innerHTML = `This week has passed <span class="countdown-number">${dayOfWeek}</span> ${weekUnit}.`;
+    if (monthText) monthText.innerHTML = `This month has passed <span class="countdown-number">${dayOfMonth}</span> ${monthUnit}.`;
+    if (yearText) yearText.innerHTML = `This year has passed <span class="countdown-number">${dayOfYear}</span> ${yearUnit}.`;
+
+    // Update progress bars
+    const updateBar = (id, progress) => {
+      const bar = document.getElementById(id);
+      if (bar) {
+        bar.style.width = `${progress}%`;
+      }
+    };
+
+    updateBar('todayProgress', todayProgress);
+    updateBar('weekProgress', weekProgress);
+    updateBar('monthProgress', monthProgress);
+    updateBar('yearProgress', yearProgress);
+  },
+
+  // Helper function for singular/plural
+  pluralize(count, singular) {
+    return count === 1 ? singular : singular + 's';
   },
 
   // 生成并渲染TOC
@@ -445,11 +577,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   // 等待数据初始化完成
   if (typeof BlogManager !== 'undefined') {
     await BlogManager.init();
-  }
-  
-  // 初始化彩蛋管理器
-  if (typeof EasterEggManager !== 'undefined') {
-    await EasterEggManager.init();
   }
   
   Router.init();
