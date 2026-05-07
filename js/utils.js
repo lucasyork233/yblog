@@ -4,9 +4,9 @@
 const blogs = [
   {
     "slug": "post-010",
-    "title": "《六祖坛经》",
+    "title": "关于我看了坛经开头觉得很有意思这件事",
     "date": "2026-05-03T00:00:00.000Z",
-    "summary": "看了个开头",
+    "summary": "《六祖坛经》，看了个开头",
     "tags": [
       "reading"
     ]

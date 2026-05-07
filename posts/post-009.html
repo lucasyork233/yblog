@@ -30,7 +30,30 @@ del C:\ProgramData\Microsoft\Windows\CapabilityAccessManager\CapabilityAccessMan
 net start camsvc</code></pre></p><p><h2>后续</h2></p><p><ul>
 <li>做完上面步骤，CapabilityAccessManager.db-wal 归零，但还是会变大
 </li>
-<li>后来发现还有个方法，禁用“windows search”服务，这个下回再试吧
+</ul></p><p><hr></p><p><ul>
+<li>2026-05-07
+</li>
+</ul></p><p><h2>Stop Windows Search</h2></p><p><ol>
+<li>win + r, 输入 services.msc
+</li>
+<li>Windows Search 右键停止
+</li>
+<li>进入 <code>C:\ProgramData\Microsoft\Search\Data\Applications\Windows</code>，打开 Search/ 需要授予权限
+</li>
+<li>我看到的教程中是“删除 Windows.edb”，不过我没有这个文件，所以这个方法对我而言没什么用
+</li>
+</ol></p><p><h2>CapabilityAccessManager</h2></p><p><ul>
+<li>我又删了一次，这次没有进“安全模式”
+</li>
+<li>重启电脑，没有联网
+</li>
+<li>管理员身份打开 cmd
+</li>
+<li>输入上面的三行命令（第二步手动删也行）
+</li>
+<li>这回可以删除
+</li>
+<li>然后重启一下，不然连不了网
 </li>
 </ul></p>
   </article>
