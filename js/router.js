@@ -103,7 +103,7 @@ const Router = {
             </div>
           </div>
           <div class="card-content">
-            <img src="assets/avatar.jpg" alt="Avatar" class="avatar">
+            <img src="assets/avatar.png" alt="Avatar" class="avatar">
             <div class="greeting">${greeting}.</div>
             <div class="intro">I'm <a href="#about" class="name">LucasYork</a>.</div>
             <div class="nice-to-meet">Nice to meet you!</div>
@@ -428,13 +428,13 @@ const Router = {
   renderAbout() {
     const app = document.getElementById('app');
 
-    // <img src="assets/avatar.jpg" alt="Avatar" class="avatar">
+    // <img src="assets/avatar.png" alt="Avatar" class="avatar">
     // <img src="https://user1481.cn.imgto.link/blog_lucky/20260206/head-02.avif" alt="LucasYork" class="about-avatar">
     app.innerHTML = `
       <div class="container about-page">
         <article class="card">
           <div class="about-header">
-            <img src="assets/avatar.jpg" alt="Avatar" class="avatar">
+            <img src="assets/avatar.png" alt="Avatar" class="avatar">
             <h1 class="about-title">About Me</h1>
           </div>
           <div class="about-content">
