@@ -13,11 +13,11 @@ const blogs = [
   },
   {
     "slug": "post-009",
-    "title": "The ever-growing C drive",
+    "title": "stop CapabilityAccessManager.db-wal growing",
     "date": "2026-04-11T00:00:00.000Z",
-    "summary": "治标不治本的办法",
+    "summary": "删了三次",
     "tags": [
-      "Disk C"
+      "c-drive"
     ]
   },
   {
