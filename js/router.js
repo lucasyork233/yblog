@@ -1,6 +1,10 @@
 // 路由系统
 
 const Router = {
+  getFooterHTML() {
+    return '<footer class="site-footer"><a href="https://icp.gov.moe/?keyword=20260618" target="_blank" rel="noopener">萌ICP备20260618号</a></footer>';
+  },
+
   init() {
     window.addEventListener('hashchange', () => this.handleRoute());
     this.handleRoute();
@@ -73,42 +77,45 @@ const Router = {
 
     app.innerHTML = `
       <div class="page home-page">
-        <div class="home-card">
-          <div class="countdown-overlay">
-            <div class="countdown-items">
-              <div class="countdown-item">
-                <div class="countdown-item-text" id="todayText"></div>
-                <div class="countdown-bar">
-                  <div class="countdown-progress countdown-progress-today" id="todayProgress"></div>
+        <div class="home-main">
+          <div class="home-card">
+            <div class="countdown-overlay">
+              <div class="countdown-items">
+                <div class="countdown-item">
+                  <div class="countdown-item-text" id="todayText"></div>
+                  <div class="countdown-bar">
+                    <div class="countdown-progress countdown-progress-today" id="todayProgress"></div>
+                  </div>
                 </div>
-              </div>
-              <div class="countdown-item">
-                <div class="countdown-item-text" id="weekText"></div>
-                <div class="countdown-bar">
-                  <div class="countdown-progress countdown-progress-week" id="weekProgress"></div>
+                <div class="countdown-item">
+                  <div class="countdown-item-text" id="weekText"></div>
+                  <div class="countdown-bar">
+                    <div class="countdown-progress countdown-progress-week" id="weekProgress"></div>
+                  </div>
                 </div>
-              </div>
-              <div class="countdown-item">
-                <div class="countdown-item-text" id="monthText"></div>
-                <div class="countdown-bar">
-                  <div class="countdown-progress countdown-progress-month" id="monthProgress"></div>
+                <div class="countdown-item">
+                  <div class="countdown-item-text" id="monthText"></div>
+                  <div class="countdown-bar">
+                    <div class="countdown-progress countdown-progress-month" id="monthProgress"></div>
+                  </div>
                 </div>
-              </div>
-              <div class="countdown-item">
-                <div class="countdown-item-text" id="yearText"></div>
-                <div class="countdown-bar">
-                  <div class="countdown-progress countdown-progress-year" id="yearProgress"></div>
+                <div class="countdown-item">
+                  <div class="countdown-item-text" id="yearText"></div>
+                  <div class="countdown-bar">
+                    <div class="countdown-progress countdown-progress-year" id="yearProgress"></div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div class="card-content">
-            <img src="assets/avatar.png" alt="Avatar" class="avatar">
-            <div class="greeting">${greeting}.</div>
-            <div class="intro">I'm <a href="#about" class="name">LucasYork</a>.</div>
-            <div class="nice-to-meet">Nice to meet you!</div>
+            <div class="card-content">
+              <img src="assets/avatar.png" alt="Avatar" class="avatar">
+              <div class="greeting">${greeting}.</div>
+              <div class="intro">I'm <a href="#about" class="name">LucasYork</a>.</div>
+              <div class="nice-to-meet">Nice to meet you!</div>
+            </div>
           </div>
         </div>
+        ${this.getFooterHTML()}
       </div>
     `;
 
@@ -228,7 +235,9 @@ const Router = {
         </div>
         ${hasResults || '<p class="blog-no-results">No articles found</p>'}
       </div>
-      ${showFish ? '<div id="j-fish-skip" style="position: relative; height: 153px; width: 100%; margin-top: auto;"></div>' : ''}
+      ${showFish ? '<div id="j-fish-skip" style="position: relative; width: 100%; height: 170px;">' +
+        '<div class="fish-icp"><a href="https://icp.gov.moe/?keyword=20260618" target="_blank" rel="noopener">萌ICP备20260618号</a></div>' +
+      '</div>' : this.getFooterHTML()}
     `;
 
     // 搜索功能 - 回车触发
@@ -338,6 +347,7 @@ const Router = {
           </article>
         </div>
       </div>
+      ${this.getFooterHTML()}
     `;
 
     // 生成并渲染TOC
@@ -416,6 +426,7 @@ const Router = {
           <a href="/" class="back-link" style="margin: 0 auto;">返回首页</a>
         </div>
       </div>
+      ${this.getFooterHTML()}
     `;
 
     const backLink = app.querySelector('.back-link');
@@ -445,6 +456,7 @@ const Router = {
           <a href="/" class="back-link">Back to Home</a>
         </article>
       </div>
+      ${this.getFooterHTML()}
     `;
 
     const backLink = app.querySelector('.back-link');
