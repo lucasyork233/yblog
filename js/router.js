@@ -442,21 +442,23 @@ const Router = {
     // <img src="assets/avatar.png" alt="Avatar" class="avatar">
     // <img src="https://user1481.cn.imgto.link/blog_lucky/20260206/head-02.avif" alt="LucasYork" class="about-avatar">
     app.innerHTML = `
-      <div class="container about-page">
-        <article class="card">
-          <div class="about-header">
-            <img src="assets/avatar.png" alt="Avatar" class="avatar">
-            <h1 class="about-title">About Me</h1>
-          </div>
-          <div class="about-content">
-            <p>Hi, I'm LucasYork, a programming enthusiast.</p>
-            <p>I code in C++, Golang, and Python. Beyond programming, I enjoy music, running, and reading.</p>
-            <p>This blog is where I share my technical journey and thoughts.</p>
-          </div>
-          <a href="/" class="back-link">Back to Home</a>
-        </article>
+      <div class="about-wrapper">
+        <div class="container about-page">
+          <article class="card">
+            <div class="about-header">
+              <img src="assets/avatar.png" alt="Avatar" class="avatar">
+              <h1 class="about-title">About Me</h1>
+            </div>
+            <div class="about-content">
+              <p>Hi, I'm LucasYork, a programming enthusiast.</p>
+              <p>I code in C++, Golang, and Python. Beyond programming, I enjoy music, running, and reading.</p>
+              <p>This blog is where I share my technical journey and thoughts.</p>
+            </div>
+            <a href="/" class="back-link">Back to Home</a>
+          </article>
+        </div>
+        ${this.getFooterHTML()}
       </div>
-      ${this.getFooterHTML()}
     `;
 
     const backLink = app.querySelector('.back-link');
