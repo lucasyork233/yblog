@@ -45,11 +45,7 @@ yblog/
 │   └── responsive.css     # 响应式
 ├── js/
 │   ├── utils.js           # 工具函数
-│   ├── fish-animation.js  # egg~
 │   └── router.js
-├── eggs/
-│   ├── egg1.html
-│   └── egg2.html
 ├── posts/                 # .md -> .html
 └── posts-md/              # markdown
     ├── post-001.md
