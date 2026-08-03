@@ -1,14 +1,11 @@
-# dependencies
-/node_modules
-
 # claude
 .claude/
 
 # vscode
 .vscode/
 
-# post
-posts-md/
+# dependencies
+/node_modules
 
-# tool
-tools/
+# posts
+posts-md/
